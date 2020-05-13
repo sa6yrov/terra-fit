@@ -1,0 +1,37 @@
+package kg.sabyrov.terrafit.entity;
+
+import kg.sabyrov.terrafit.enums.Status;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "wallets")
+public class Wallet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    User user;
+
+    @Column(name = "requisite")
+    String requisite;
+
+    @Column(name = "balance")
+    BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status;
+
+}
