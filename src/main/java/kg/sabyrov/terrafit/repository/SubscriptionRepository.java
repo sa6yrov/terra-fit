@@ -1,10 +1,9 @@
 package kg.sabyrov.terrafit.repository;
 
-import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-
+public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 }

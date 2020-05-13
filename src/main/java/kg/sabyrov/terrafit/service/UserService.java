@@ -1,4 +1,6 @@
 package kg.sabyrov.terrafit.service;
 
-public interface UserService {
+import kg.sabyrov.terrafit.entity.User;
+
+public interface UserService extends BaseService<User>{
 }

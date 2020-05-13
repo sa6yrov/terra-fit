@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "person_params")
-public class PersonParams {
+public class PersonParam {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

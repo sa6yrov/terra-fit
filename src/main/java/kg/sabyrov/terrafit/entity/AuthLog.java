@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "auth_logs")
-public class AuthLogs {
+public class AuthLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
