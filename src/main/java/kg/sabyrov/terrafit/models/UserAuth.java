@@ -1,4 +1,4 @@
-package kg.sabyrov.terrafit.models.request;
+package kg.sabyrov.terrafit.models;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

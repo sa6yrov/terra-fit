@@ -1,7 +1,8 @@
 package kg.sabyrov.terrafit.config;
 
-import kg.sabyrov.terrafit.models.JwtTokenAuthorizationOncePerRequestFilter;
-import kg.sabyrov.terrafit.models.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import kg.sabyrov.terrafit.security.jwt.JwtConfigurer;
+import kg.sabyrov.terrafit.security.jwt.JwtTokenFilter;
+import kg.sabyrov.terrafit.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,59 +21,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final JwtTokenProvider jwtTokenProvider;
+    private static final String ADMIN_ENDPOINT = "/api/v1/admin";
+    private static final String LOGIN_ENDPOINT = "/api/auth/login";
 
     @Autowired
-    private JwtUnAuthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
-
-    @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
-
-    @Autowired
-    private JwtTokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
-
-    @Value("${jwt.get.token.uri}")
-    private String authenticationPath;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(jwtInMemoryUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint)
-                .and()
+        http.httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .anyRequest()
-                .authenticated();
-
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-        http.headers().frameOptions().sameOrigin().cacheControl();
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers(HttpMethod.POST, authenticationPath)
-                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .ignoring()
-                .antMatchers(HttpMethod.GET, "/") //Other stuff which i want to ignore
-                .and()
-                .ignoring()
-                .antMatchers("/h2-console/**/**"); //Should not be in Production
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Bean

@@ -19,13 +19,8 @@ public class Role {
     Long id;
 
     @Column(name = "name", nullable = false)
-    String role;
+    String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = {@JoinColumn(name = "role_id", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", nullable = false)}
-    )
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
     private List<User> users;
 }

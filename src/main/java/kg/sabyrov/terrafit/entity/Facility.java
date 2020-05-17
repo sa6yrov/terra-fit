@@ -14,7 +14,6 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "facilities")
 public class Facility {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
