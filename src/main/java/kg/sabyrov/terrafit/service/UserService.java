@@ -1,9 +1,12 @@
 package kg.sabyrov.terrafit.service;
 
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.models.UserModel;
 
 public interface UserService extends BaseService<User>{
-    User findByEmail(String email);
+    User findByEmailAndIsActive(String email, Integer isActive);
 
-    User registre(User user);
+    User create(UserModel userModel);
+
+    User findByEmail(String email);
 }

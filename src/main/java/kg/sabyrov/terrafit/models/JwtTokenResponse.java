@@ -5,16 +5,17 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class UserAuth implements Serializable {
-    static final long serialVersionUID = -5616176897013108345L;
+public class JwtTokenResponse implements Serializable {
+    private static final long serialVersionUID = 8317676219297719109L;
 
-    String email;
-    String password;
+    String token;
 
+    public String getToken() {
+        return token;
+    }
 }

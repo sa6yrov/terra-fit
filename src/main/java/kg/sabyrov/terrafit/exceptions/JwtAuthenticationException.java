@@ -7,6 +7,4 @@ public class JwtAuthenticationException extends AuthenticationException {
         super(explanation);
     }
 
-    public JwtAuthenticationException() {
-    }
 }
