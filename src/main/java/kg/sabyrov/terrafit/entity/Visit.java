@@ -30,5 +30,5 @@ public class Visit {
 
     @CreatedDate
     @Column(name = "visit_date")
-    Date date;
+    Date visitDate;
 }

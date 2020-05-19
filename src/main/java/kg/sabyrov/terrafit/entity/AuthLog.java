@@ -27,7 +27,7 @@ public class AuthLog {
 
     @CreatedDate
     @Column(name = "authorization_date", nullable = false)
-    Date date;
+    Date authorizationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
