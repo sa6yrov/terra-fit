@@ -19,13 +19,10 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     User user;
 
-    @ManyToOne
-    @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
-    Facility facility;
 
     @Column(name = "position", nullable = false)
     String position;

@@ -20,10 +20,6 @@ public class Subscription {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
-    Facility facility;
-
-    @ManyToOne
     @JoinColumn(name = "training_section_id", referencedColumnName = "id", nullable = false)
     TrainingSection trainingSection;
 

@@ -2,7 +2,7 @@ package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.entity.Role;
 import kg.sabyrov.terrafit.entity.User;
-import kg.sabyrov.terrafit.models.UserModel;
+import kg.sabyrov.terrafit.dto.User.UserDto;
 import kg.sabyrov.terrafit.repository.RoleRepository;
 import kg.sabyrov.terrafit.repository.UserRepository;
 import kg.sabyrov.terrafit.service.UserService;
@@ -37,21 +37,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserModel userModel) {
+    public User create(UserDto userDto) {
         Role roleUser = roleRepository.findByName("ROLE_USER");
 
         List<Role> roleList = new ArrayList<>();
         roleList.add(roleUser);
 
         User user = User.builder()
-                .email(userModel.getEmail())
-                .name(userModel.getName())
-                .surname(userModel.getSurname())
-                .password(passwordEncoder.encode(userModel.getPassword()))
-                .birthDate(userModel.getBirthDate())
-                .gender(userModel.getGender())
+                .email(userDto.getEmail())
+                .name(userDto.getName())
+                .surname(userDto.getSurname())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .birthDate(userDto.getBirthDate())
+                .gender(userDto.getGender())
                 .isActive(1)
-                .phoneNumber(userModel.getPhoneNumber())
+                .phoneNumber(userDto.getPhoneNumber())
                 .roles(roleList)
                 .build();
 
@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User findBySurnameAndName(String surname, String name) {
+        return userRepository.findBySurnameAndName(surname, name);
     }
 
     @Override

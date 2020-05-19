@@ -19,9 +19,6 @@ public class TrainingSection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "facility_id", referencedColumnName = "id")
-    Facility facility;
 
     @Column(name = "name")
     String name;
