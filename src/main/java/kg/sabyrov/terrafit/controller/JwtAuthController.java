@@ -22,14 +22,17 @@ public class JwtAuthController {
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService jwtUserDetailsService;
 
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
+    public JwtAuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserDetailsService jwtUserDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+    }
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
     public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) throws JwtAuthenticationException {

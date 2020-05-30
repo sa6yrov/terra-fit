@@ -2,28 +2,39 @@ package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.entity.Role;
 import kg.sabyrov.terrafit.entity.User;
-import kg.sabyrov.terrafit.dto.User.UserDto;
+import kg.sabyrov.terrafit.dto.userDto.UserModel;
+import kg.sabyrov.terrafit.entity.Wallet;
+import kg.sabyrov.terrafit.enums.Status;
+import kg.sabyrov.terrafit.exceptions.UserRegisterException;
+import kg.sabyrov.terrafit.models.ResponseMessage;
 import kg.sabyrov.terrafit.repository.RoleRepository;
 import kg.sabyrov.terrafit.repository.UserRepository;
 import kg.sabyrov.terrafit.service.UserService;
+import kg.sabyrov.terrafit.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
+    private  PasswordEncoder passwordEncoder;
+    private WalletService walletService;
 
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, WalletService walletService) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.walletService = walletService;
+    }
 
     @Override
     public User save(User user) {
@@ -37,33 +48,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserDto userDto) {
-        Role roleUser = roleRepository.findByName("ROLE_USER");
+    public ResponseMessage create(UserModel userModel) throws UserRegisterException {
+        if(!checkUserModelForUnique(userModel.getEmail())) {
+            throw  new UserRegisterException("User with this email already exists");
+        }
 
-        List<Role> roleList = new ArrayList<>();
-        roleList.add(roleUser);
+        User user = saveAndGetUserByUserModel(userModel);
+        createWalletForUser(user);
 
-        User user = User.builder()
-                .email(userDto.getEmail())
-                .name(userDto.getName())
-                .surname(userDto.getSurname())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .birthDate(userDto.getBirthDate())
-                .gender(userDto.getGender())
-                .isActive(1)
-                .phoneNumber(userDto.getPhoneNumber())
-                .roles(roleList)
-                .build();
+        return new ResponseMessage(user.getEmail() + " was successfully registered");
 
-
-        return save(user);
     }
-
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
     @Override
     public User findBySurnameAndName(String surname, String name) {
         return userRepository.findBySurnameAndName(surname, name);
@@ -79,6 +78,38 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+    private User saveAndGetUserByUserModel(UserModel userModel){
+        Role roleUser = roleRepository.findByName("ROLE_USER");
+        List<Role> roleList = new ArrayList<>();
+        roleList.add(roleUser);
 
+        User user = User.builder()
+                .email(userModel.getEmail())
+                .name(userModel.getName())
+                .surname(userModel.getSurname())
+                .password(passwordEncoder.encode(userModel.getPassword()))
+                .birthDate(userModel.getBirthDate())
+                .gender(userModel.getGender())
+                .isActive(1)
+                .phoneNumber(userModel.getPhoneNumber())
+                .roles(roleList)
+                .build();
+        return save(user);
+    }
+
+    private void createWalletForUser(User user){
+        Wallet wallet = Wallet.builder()
+                .balance(new BigDecimal(BigInteger.ZERO))
+                .status(Status.ACTIVE)
+                .user(user)
+                .requisite(walletService.generateRequisite())
+                .build();
+
+        walletService.save(wallet);
+    }
+
+    private boolean checkUserModelForUnique(String email){
+        return findByEmail(email) == null;
+    }
 
 }

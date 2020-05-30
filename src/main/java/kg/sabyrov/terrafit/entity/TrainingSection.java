@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -26,6 +27,9 @@ public class TrainingSection {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     Employee employees;
+
+    @Column(name = "subscription_price")
+    BigDecimal subscriptionPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

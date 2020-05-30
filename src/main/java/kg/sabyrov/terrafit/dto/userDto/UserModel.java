@@ -1,4 +1,4 @@
-package kg.sabyrov.terrafit.dto.User;
+package kg.sabyrov.terrafit.dto.userDto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
+public class UserModel {
     String email;
     String password;
     String phoneNumber;

@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -27,6 +28,9 @@ public class UserSubscription {
     @ManyToOne
     @JoinColumn(name = "subscription_id", referencedColumnName = "id", nullable = false)
     Subscription subscription;
+
+    @Column(name = "price")
+    BigDecimal price;
 
     @CreatedDate
     @Column(name = "created_date", nullable = false)

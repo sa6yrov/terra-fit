@@ -29,4 +29,10 @@ public class WalletServiceImpl implements WalletService {
     public List<Wallet> getAll() {
         return walletRepository.findAll();
     }
+
+
+    @Override
+    public String generateRequisite() {
+        return "" + System.currentTimeMillis();
+    }
 }

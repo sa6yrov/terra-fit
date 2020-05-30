@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -25,9 +26,6 @@ public class Subscription {
 
     @Column(name = "session_quantity", nullable = false)
     Integer sessionQuantity;
-
-    @Column(name = "price", nullable = false)
-    Integer price;
 
     @Column(name = "code", nullable = false, unique = true)
     String code;
