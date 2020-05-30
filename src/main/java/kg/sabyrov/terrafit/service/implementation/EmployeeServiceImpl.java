@@ -11,8 +11,13 @@ import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
+    private final EmployeeRepository employeeRepository;
+
     @Autowired
-    private EmployeeRepository employeeRepository;
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @Override
     public Employee save(Employee employee) {
@@ -28,5 +33,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getAll() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public Employee findByUserEmail(String email) {
+        return employeeRepository.findByUser_Email(email);
     }
 }

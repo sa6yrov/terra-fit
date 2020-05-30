@@ -17,9 +17,9 @@ import java.util.Optional;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-    private SubscriptionRepository subscriptionRepository;
-    private TrainingSectionService trainingSectionService;
-    private UserService userService;
+    private final SubscriptionRepository subscriptionRepository;
+    private final TrainingSectionService trainingSectionService;
+    private final UserService userService;
 
     @Autowired
     public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingSectionService trainingSectionService, UserService userService) {

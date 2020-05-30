@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrainingSectionRepository extends JpaRepository<TrainingSection, Long> {
+
 }

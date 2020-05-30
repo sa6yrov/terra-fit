@@ -12,8 +12,12 @@ import java.util.Optional;
 
 @Service
 public class UserSubscriptionServiceImpl implements UserSubscriptionService {
+    private final UserSubscriptionRepository userSubscriptionRepository;
+
     @Autowired
-    private UserSubscriptionRepository userSubscriptionRepository;
+    public UserSubscriptionServiceImpl(UserSubscriptionRepository userSubscriptionRepository) {
+        this.userSubscriptionRepository = userSubscriptionRepository;
+    }
 
     @Override
     public UserSubscription save(UserSubscription userSubscription) {

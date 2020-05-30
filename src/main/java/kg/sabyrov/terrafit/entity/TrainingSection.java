@@ -26,7 +26,7 @@ public class TrainingSection {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    Employee employees;
+    Employee employee;
 
     @Column(name = "subscription_price")
     BigDecimal subscriptionPrice;

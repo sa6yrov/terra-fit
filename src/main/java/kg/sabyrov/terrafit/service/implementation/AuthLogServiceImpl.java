@@ -11,8 +11,13 @@ import java.util.Optional;
 
 @Service
 public class AuthLogServiceImpl implements AuthLogService {
+
+    private final AuthLogRepository authLogRepository;
+
     @Autowired
-    private AuthLogRepository authLogRepository;
+    public AuthLogServiceImpl(AuthLogRepository authLogRepository) {
+        this.authLogRepository = authLogRepository;
+    }
 
     @Override
     public AuthLog save(AuthLog authLog) {
