@@ -52,13 +52,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel) {
-        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestModel.getTrainingSectionId());
-        Subscription subscription = Subscription.builder()
-                .trainingSection(trainingSection)
-                .sessionQuantity(subscriptionRequestModel.getSessionQuantity())
-                .code(generateCode())
-                .discountPercentages()
-                .build();
+//        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestModel.getTrainingSectionId());
+//        Subscription subscription = Subscription.builder()
+//                .trainingSection(trainingSection)
+//                .sessionQuantity(subscriptionRequestModel.getSessionQuantity())
+//                .code(generateCode())
+//                .discountPercentages()
+//                .build();
+        return null;
 
     }
     private String generateCode(){

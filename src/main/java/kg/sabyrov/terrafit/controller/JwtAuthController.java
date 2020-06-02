@@ -41,17 +41,17 @@ public class JwtAuthController {
     }
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
-    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) throws JwtAuthenticationException {
-        authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
+    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) {
         try {
+            authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
+
             final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(jwtTokenRequest.getEmail());
             final String token = jwtUtil.generateToken(userDetails);
 
-            authLogService.create(userDetails.getUsername(), Status.OK);
+            authLogService.create(jwtTokenRequest.getEmail(), Status.OK);
             return ResponseEntity.ok(new JwtTokenResponse(token));
-
         }catch (Exception e){
-
+            authLogService.create(jwtTokenRequest.getEmail(), Status.FAILED);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
