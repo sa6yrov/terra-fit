@@ -14,12 +14,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "training_sections")
-public class TrainingSection {
+public class TrainingSection extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
 
     @Column(name = "name")
     String name;

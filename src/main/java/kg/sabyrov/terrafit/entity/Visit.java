@@ -14,11 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "visits")
-public class Visit {
+public class Visit extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -28,7 +28,7 @@ public class Visit {
     @JoinColumn(name = "subscription_id", referencedColumnName = "id")
     Subscription subscription;
 
-    @CreatedDate
-    @Column(name = "visit_date")
-    Date visitDate;
+//    @CreatedDate
+//    @Column(name = "visit_date")
+//    Date visitDate;
 }

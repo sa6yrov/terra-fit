@@ -15,7 +15,6 @@ public class SubscriptionResponseModel {
     String trainingName;
     Integer sessionQuantity;
     BigDecimal price;
-    String code;
     Integer discountPercentages;
     BigDecimal totalAmount;
     Status status;

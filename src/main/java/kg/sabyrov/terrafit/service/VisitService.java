@@ -6,5 +6,5 @@ import kg.sabyrov.terrafit.entity.Visit;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 
 public interface VisitService extends BaseService<Visit> {
-    UserSubscriptionModel create(String code) throws SubscriptionNotFoundException;
+    UserSubscriptionModel create(Long id) throws SubscriptionNotFoundException;
 }

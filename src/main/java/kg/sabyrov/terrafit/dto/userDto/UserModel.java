@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +20,6 @@ public class UserModel {
     String phoneNumber;
     String name;
     String surname;
-    Date birthDate;
+    LocalDate birthDate;
     String gender;
 }

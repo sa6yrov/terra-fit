@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -16,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
 
     @Email
     @Column(name = "email", nullable = false, unique = true)
@@ -39,7 +40,7 @@ public class User {
     String surname;
 
     @Column(name = "birth_date", nullable = false)
-    Date birthDate;
+    LocalDate birthDate;
 
     @Column(name = "gender", nullable = false)
     String gender;

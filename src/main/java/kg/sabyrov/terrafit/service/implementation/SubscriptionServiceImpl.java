@@ -18,14 +18,14 @@ import java.util.Optional;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
-    private final TrainingSectionService trainingSectionService;
-    private final UserService userService;
+//    private final TrainingSectionService trainingSectionService;
+//    private final UserService userService;
 
     @Autowired
     public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingSectionService trainingSectionService, UserService userService) {
         this.subscriptionRepository = subscriptionRepository;
-        this.trainingSectionService = trainingSectionService;
-        this.userService = userService;
+//        this.trainingSectionService = trainingSectionService;
+//        this.userService = userService;
     }
 
     @Override
@@ -45,10 +45,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findAll();
     }
 
-    @Override
-    public Subscription findByCode(String code) {
-        return subscriptionRepository.findByCode(code);
-    }
 
     @Override
     public SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel) {
@@ -62,9 +58,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return null;
 
     }
-    private String generateCode(){
-        return " ";
-    }
+
     private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
         if(sessionQuantity == 12) return new BigDecimal(1);
         else return new BigDecimal(3);

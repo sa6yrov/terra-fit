@@ -12,11 +12,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "person_params")
-public class PersonParam {
+public class PersonParam extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

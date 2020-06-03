@@ -19,9 +19,9 @@ public class VisitController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(String code){
+    public ResponseEntity<?> create(Long id){
         try {
-            return new ResponseEntity<>(visitService.create(code), HttpStatus.OK);
+            return new ResponseEntity<>(visitService.create(id), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

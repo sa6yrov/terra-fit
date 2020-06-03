@@ -46,7 +46,6 @@ public class AuthLogServiceImpl implements AuthLogService {
         User user = userService.findByEmail(email);
         AuthLog authLog = AuthLog.builder()
                 .user(user)
-                .authorizationDate(new Date())
                 .status(status)
                 .build();
 

@@ -3,9 +3,11 @@ package kg.sabyrov.terrafit.entity;
 import kg.sabyrov.terrafit.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Data
@@ -14,24 +16,33 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "subscriptions")
-public class Subscription {
+public class Subscription extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    User user;
 
     @ManyToOne
     @JoinColumn(name = "training_section_id", referencedColumnName = "id", nullable = false)
     TrainingSection trainingSection;
 
+
     @Column(name = "session_quantity", nullable = false)
     Integer sessionQuantity;
 
-    @Column(name = "code", nullable = false, unique = true)
-    String code;
-
     @Column(name = "discount_percentages")
     Integer discountPercentages;
+
+    @Column(name = "totalAmount")
+    BigDecimal totalAmount;
+
+//    @CreatedDate
+//    @Column(name = "created_date")
+//    Date createdDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

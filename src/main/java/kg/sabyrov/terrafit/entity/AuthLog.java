@@ -15,19 +15,19 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "auth_logs")
-public class AuthLog {
+public class AuthLog extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     User user;
 
-    @CreatedDate
-    @Column(name = "authorization_date", nullable = false)
-    Date authorizationDate;
+//    @CreatedDate
+//    @Column(name = "authorization_date", nullable = false)
+//    Date authorizationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
