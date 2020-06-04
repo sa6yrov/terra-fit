@@ -60,13 +60,13 @@ public class VisitServiceImpl implements VisitService {
                 .build();
         save(visit);
 
-        BigDecimal discountPercentagesMultiplier = new BigDecimal(subscription.getDiscountPercentages()).divide(BigDecimal.valueOf(100L), 1, RoundingMode.UNNECESSARY);
-        BigDecimal totalPrice = subscription.getTrainingSection().getSubscriptionPrice().multiply(discountPercentagesMultiplier);
+
+
         SubscriptionResponseModel subscriptionResponseModel = SubscriptionResponseModel.builder()
                 .trainingName(subscription.getTrainingSection().getName())
                 .price(subscription.getTrainingSection().getSubscriptionPrice())
                 .discountPercentages(subscription.getDiscountPercentages())
-                .totalAmount(totalPrice)
+                .totalAmount(subscription.getTotalAmount())
                 .sessionQuantity(subscription.getSessionQuantity())
                 .status(subscription.getStatus())
                 .build();

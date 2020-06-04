@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class SubscriptionRequestModel {
     Long trainingSectionId;
     Integer sessionQuantity;
+    String promoCode;
 }

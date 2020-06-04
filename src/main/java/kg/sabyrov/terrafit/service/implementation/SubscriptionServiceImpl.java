@@ -12,20 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
-//    private final TrainingSectionService trainingSectionService;
-//    private final UserService userService;
+    private final TrainingSectionService trainingSectionService;
+    private final UserService userService;
 
     @Autowired
     public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingSectionService trainingSectionService, UserService userService) {
         this.subscriptionRepository = subscriptionRepository;
-//        this.trainingSectionService = trainingSectionService;
-//        this.userService = userService;
+        this.trainingSectionService = trainingSectionService;
+        this.userService = userService;
     }
 
     @Override
@@ -48,21 +49,29 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel) {
-//        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestModel.getTrainingSectionId());
-//        Subscription subscription = Subscription.builder()
-//                .trainingSection(trainingSection)
-//                .sessionQuantity(subscriptionRequestModel.getSessionQuantity())
-//                .code(generateCode())
-//                .discountPercentages()
-//                .build();
+        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestModel.getTrainingSectionId());
+        Subscription subscription = Subscription.builder()
+                .trainingSection(trainingSection)
+                .sessionQuantity(subscriptionRequestModel.getSessionQuantity())
+                .discountPercentages(0)
+                .totalAmount(getTotalPrice(0, trainingSection.getSubscriptionPrice()))
+                .build();
         return null;
 
     }
+    private BigDecimal getTotalPrice(Integer discount, TrainingSection trainingSection, Integer sessionQuantity){
+        if(trainingSection.getName().equals("Тренажерный зал") && sessionQuantity == 1) return new BigDecimal(200);
 
-    private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
-        if(sessionQuantity == 12) return new BigDecimal(1);
-        else return new BigDecimal(3);
+        BigDecimal discountPercentagesMultiplier = new BigDecimal(discount).divide(BigDecimal.valueOf(100L), 1, RoundingMode.UNNECESSARY);
+//        return price.multiply(discountPercentagesMultiplier);
     }
+//    private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
+//        switch (sessionQuantity){
+//            case 1 : return new BigDecimal();
+//
+//            case 12 : return new BigDecimal()
+//        }
+//    }
 
 
 }
