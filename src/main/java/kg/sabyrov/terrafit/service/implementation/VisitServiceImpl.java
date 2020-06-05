@@ -1,7 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseModel;
-import kg.sabyrov.terrafit.dto.userDto.UserSubscriptionModel;
+import kg.sabyrov.terrafit.dto.userDto.UserSubscriptionResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.Visit;
@@ -12,9 +12,6 @@ import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +45,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public UserSubscriptionModel create(Long id) throws SubscriptionNotFoundException {
+    public UserSubscriptionResponseDto create(Long id) throws SubscriptionNotFoundException {
         if(!checkCode(id)) throw new SubscriptionNotFoundException("Subscription with this code not found");
 
         Subscription subscription = visitProcess(id);
@@ -71,7 +68,7 @@ public class VisitServiceImpl implements VisitService {
                 .status(subscription.getStatus())
                 .build();
 
-        return UserSubscriptionModel.builder()
+        return UserSubscriptionResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .surname(user.getSurname())

@@ -14,9 +14,6 @@ import javax.persistence.*;
 @Table(name = "person_params")
 public class PersonParam extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -16,9 +16,9 @@ import java.math.BigDecimal;
 @Table(name = "training_sections")
 public class TrainingSection extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
+    @ManyToOne
+    @JoinColumn(name = "training_group_category_id", referencedColumnName = "id")
+    TrainingGroupCategory trainingGroupCategory;
 
     @Column(name = "name")
     String name;
@@ -29,6 +29,9 @@ public class TrainingSection extends BaseEntity{
 
     @Column(name = "subscription_price")
     BigDecimal subscriptionPrice;
+
+    @Column(name = "training_time")
+    String trainingTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

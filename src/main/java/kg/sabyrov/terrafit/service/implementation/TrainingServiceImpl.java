@@ -44,7 +44,6 @@ public class TrainingServiceImpl implements TrainingSectionService {
         TrainingSection trainingSection = TrainingSection.builder()
                 .name(trainingSectionRequestModel.getName())
                 .employee(getEmployeeFromDb(trainingSectionRequestModel.getEmployeeEmail()))
-                .subscriptionPrice(trainingSectionRequestModel.getSubscriptionPrice())
                 .status(trainingSectionRequestModel.getStatus())
                 .build();
         return save(trainingSection);
@@ -71,7 +70,6 @@ public class TrainingServiceImpl implements TrainingSectionService {
             trainingSectionResponseModels.add(TrainingSectionResponseModel.builder()
                     .name(t.getName())
                     .coachName(t.getEmployee().getUser().getName())
-                    .subscriptionPrice(t.getSubscriptionPrice())
                     .status(t.getStatus())
                     .build());
         }

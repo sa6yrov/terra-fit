@@ -15,11 +15,7 @@
 //@AllArgsConstructor
 //@FieldDefaults(level = AccessLevel.PRIVATE)
 //@Table(name = "user_subscriptions")
-//public class UserSubscription {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
+//public class UserSubscription extends BaseEntity{
 //
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -29,10 +25,9 @@
 //    @JoinColumn(name = "subscription_id", referencedColumnName = "id", nullable = false)
 //    Subscription subscription;
 //
-//    @Column(name = "price")
-//    BigDecimal price;
+//    @Column(name = "discount_percentages")
+//    Integer discountPercentages;
 //
-//    @CreatedDate
-//    @Column(name = "created_date", nullable = false)
-//    Date date;
+//    @Column(name = "totalPrice")
+//    BigDecimal price;
 //}

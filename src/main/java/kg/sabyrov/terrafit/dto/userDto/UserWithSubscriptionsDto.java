@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserWithSubscriptions {
+public class UserWithSubscriptionsDto {
     String email;
     String name;
     String surname;

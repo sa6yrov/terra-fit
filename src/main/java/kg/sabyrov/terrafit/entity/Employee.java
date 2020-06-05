@@ -15,9 +15,6 @@ import javax.persistence.*;
 @Table(name = "employees")
 public class Employee extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

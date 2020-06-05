@@ -6,6 +6,5 @@ import kg.sabyrov.terrafit.entity.Subscription;
 
 public interface SubscriptionService extends BaseService<Subscription> {
 
-
     SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel);
 }

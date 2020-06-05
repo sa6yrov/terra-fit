@@ -18,9 +18,6 @@ import java.util.Date;
 @Table(name = "subscriptions")
 public class Subscription extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -30,7 +27,6 @@ public class Subscription extends BaseEntity{
     @JoinColumn(name = "training_section_id", referencedColumnName = "id", nullable = false)
     TrainingSection trainingSection;
 
-
     @Column(name = "session_quantity", nullable = false)
     Integer sessionQuantity;
 
@@ -39,10 +35,6 @@ public class Subscription extends BaseEntity{
 
     @Column(name = "totalAmount")
     BigDecimal totalAmount;
-
-//    @CreatedDate
-//    @Column(name = "created_date")
-//    Date createdDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

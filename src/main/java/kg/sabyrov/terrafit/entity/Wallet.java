@@ -16,9 +16,6 @@ import java.math.BigDecimal;
 @Table(name = "wallets")
 public class Wallet extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
