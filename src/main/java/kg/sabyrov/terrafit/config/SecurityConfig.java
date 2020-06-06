@@ -53,6 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN")
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
