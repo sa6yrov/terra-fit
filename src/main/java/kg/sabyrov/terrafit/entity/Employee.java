@@ -24,8 +24,6 @@ public class Employee extends BaseEntity{
     @Column(name = "position", nullable = false)
     String position;
 
-    @Column(name = "salary", nullable = false)
-    Integer salary;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

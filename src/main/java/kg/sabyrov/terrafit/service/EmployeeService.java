@@ -1,7 +1,11 @@
 package kg.sabyrov.terrafit.service;
 
+import kg.sabyrov.terrafit.dto.employeeDto.EmployeeRequestDto;
+import kg.sabyrov.terrafit.dto.employeeDto.EmployeeResponseDto;
 import kg.sabyrov.terrafit.entity.Employee;
 
 public interface EmployeeService extends BaseService<Employee> {
     Employee findByUserEmail(String email);
+
+    Employee create (EmployeeRequestDto employeeRequestDto);
 }

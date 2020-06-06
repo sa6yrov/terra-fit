@@ -13,8 +13,9 @@ import java.time.LocalDate;
 public class EmployeeResponseDto {
     String email;
     String name;
-    String username;
+    String surname;
     LocalDate birthDate;
     String phoneNumber;
     String gender;
+    String position;
 }
