@@ -31,8 +31,8 @@ public class PersonParam extends BaseEntity{
     @Column(name = "shoulder_width")
     Float shoulderWidth;
 
-    @Column(name = "waste_girth")
-    Float wasteGirth;
+    @Column(name = "waist_girth")
+    Float waistGirth;
 
     @Column(name = "hip_girth")
     Float hipGirth;

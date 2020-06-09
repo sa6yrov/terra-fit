@@ -1,5 +1,6 @@
 package kg.sabyrov.terrafit.controller;
 
+import kg.sabyrov.terrafit.dto.employeeDto.EmployeeRequestDto;
 import kg.sabyrov.terrafit.entity.Employee;
 import kg.sabyrov.terrafit.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(){
-
+    public ResponseEntity<?> create(EmployeeRequestDto employeeRequestDto){
+        try {
+            return new ResponseEntity<>(employeeService.create(employeeRequestDto), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
