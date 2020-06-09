@@ -53,7 +53,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeResponseDto create(EmployeeRequestDto employeeRequestDto) throws UserNotFoundException {
         Employee employee = save(Employee.builder()
                 .user(getUserFromDb(employeeRequestDto.getEmail()))
-                .salary(0)
                 .position(employeeRequestDto.getPosition())
                 .status(Status.ACTIVE)
                 .build());
@@ -70,8 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private User getUserFromDb(String email) throws UserNotFoundException {
         User user = userService.findByEmail(email);
-        if(user == null) throw  new UserNotFoundException("User with this email not found");
+        if(user == null) throw new UserNotFoundException("User with this email not found");
         return user;
-
     }
 }

@@ -17,4 +17,5 @@ public class EmployeeResponseDto {
     LocalDate birthDate;
     String phoneNumber;
     String gender;
+    String position;
 }
