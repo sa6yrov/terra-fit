@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
-import kg.sabyrov.terrafit.dto.userDto.UserModel;
+import kg.sabyrov.terrafit.dto.userDto.UserDto;
+import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register (@RequestBody UserModel userModel){
+    public ResponseEntity<?> register (@RequestBody UserDto userDto){
         try {
-            return new ResponseEntity<>(userService.create(userModel), HttpStatus.OK);
+            return new ResponseEntity<>(userService.create(userDto), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -42,18 +43,14 @@ public class UserController {
     }
 
     @PostMapping("/find")
-    public ResponseEntity<?> search(String surname, String name){
+    public ResponseEntity<?> search(UserFindDto userFindDto){
         try {
-            return new ResponseEntity<>(userService.findBySurnameAndName(surname, name), HttpStatus.OK);
+            return new ResponseEntity<>(userService.findBySurnameAndName(userFindDto), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-//    @PostMapping("/find")
-//    public ResponseEntity<?> search(String code){
-//
-//    }
 
     @GetMapping("/check")
     public String check(){

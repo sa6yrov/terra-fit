@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "training_sections")
-public class TrainingSection extends BaseEntity{
+@Table(name = "training_groups")
+public class TrainingGroup extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "training_group_category_id", referencedColumnName = "id")

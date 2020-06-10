@@ -4,12 +4,12 @@ import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
 import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
-import kg.sabyrov.terrafit.entity.TrainingSection;
+import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.repository.SubscriptionRepository;
 import kg.sabyrov.terrafit.service.PromoCodeService;
 import kg.sabyrov.terrafit.service.SubscriptionService;
-import kg.sabyrov.terrafit.service.TrainingSectionService;
+import kg.sabyrov.terrafit.service.TrainingGroupService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,14 +24,14 @@ import java.util.Optional;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
-    private final TrainingSectionService trainingSectionService;
+    private final TrainingGroupService trainingGroupService;
     private final UserService userService;
     private final PromoCodeService promoCodeService;
 
     @Autowired
-    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingSectionService trainingSectionService, UserService userService, PromoCodeService promoCodeService) {
+    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingGroupService trainingGroupService, UserService userService, PromoCodeService promoCodeService) {
         this.subscriptionRepository = subscriptionRepository;
-        this.trainingSectionService = trainingSectionService;
+        this.trainingGroupService = trainingGroupService;
         this.userService = userService;
         this.promoCodeService = promoCodeService;
     }
@@ -61,11 +61,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         for (Subscription s : subscriptions) {
             subscriptionResponses.add(SubscriptionResponseDto.builder()
-                    .trainingName(s.getTrainingSection().getName())
+                    .trainingName(s.getTrainingGroup().getName())
                     .userEmail(s.getUser().getEmail())
                     .subscriptionId(s.getId())
                     .sessionQuantity(s.getSessionQuantity())
-                    .price(s.getTrainingSection().getSubscriptionPrice())
+                    .price(s.getTrainingGroup().getSubscriptionPrice())
                     .discountPercentages(s.getDiscountPercentages())
                     .totalAmount(s.getTotalAmount())
                     .build());
@@ -76,26 +76,26 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) {
-        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestDto.getTrainingSectionId());
+        TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingSectionId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);
         Subscription subscription = save(Subscription.builder()
-                .trainingSection(trainingSection)
+                .trainingGroup(trainingGroup)
                 .user(user)
                 .sessionQuantity(subscriptionRequestDto.getSessionQuantity())
                 .discountPercentages(getDiscountPercentages(subscriptionRequestDto.getPromoCode()))
-                .totalAmount(getTotalPrice(trainingSection, subscriptionRequestDto))
+                .totalAmount(getTotalPrice(trainingGroup, subscriptionRequestDto))
                 .build());
         return getSubscriptionResponse(subscription);
 
     }
-    private BigDecimal getTotalPrice(TrainingSection trainingSection, SubscriptionRequestDto subscriptionRequestDto){
-        if(trainingSection.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
-        if(trainingSection.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
-        BigDecimal discountPrice = (trainingSection.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
+    private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto){
+        if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
+        if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
+        BigDecimal discountPrice = (trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
                     .multiply(new BigDecimal(100 / getDiscountPercentages(subscriptionRequestDto.getPromoCode())));
-        return trainingSection.getSubscriptionPrice().subtract(discountPrice);
+        return trainingGroup.getSubscriptionPrice().subtract(discountPrice);
     }
 
     private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
@@ -114,11 +114,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private SubscriptionResponseDto getSubscriptionResponse(Subscription subscription){
         return SubscriptionResponseDto.builder()
-                .trainingName(subscription.getTrainingSection().getName())
+                .trainingName(subscription.getTrainingGroup().getName())
                 .userEmail(subscription.getUser().getEmail())
                 .sessionQuantity(subscription.getSessionQuantity())
                 .subscriptionId(subscription.getId())
-                .price(subscription.getTrainingSection().getSubscriptionPrice())
+                .price(subscription.getTrainingGroup().getSubscriptionPrice())
                 .discountPercentages(subscription.getDiscountPercentages())
                 .totalAmount(subscription.getTotalAmount())
                 .build();

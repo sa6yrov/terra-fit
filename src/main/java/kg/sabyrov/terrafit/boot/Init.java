@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class Init implements CommandLineRunner {
@@ -21,18 +19,18 @@ public class Init implements CommandLineRunner {
     private final EmployeeRepository employeeRepository;
     private final PromoCodeRepository promoCodeRepository;
     private final TrainingGroupCategoryRepository trainingGroupCategoryRepository;
-    private final TrainingSectionRepository trainingSectionRepository;
+    private final TrainingGroupRepository trainingGroupRepository;
     private final PasswordEncoder passwordEncoder;
     private final WalletRepository walletRepository;
 
     @Autowired
-    public Init(UserRepository userRepository, RoleRepository roleRepository, EmployeeRepository employeeRepository, PromoCodeRepository promoCodeRepository, TrainingGroupCategoryRepository trainingGroupCategoryRepository, TrainingSectionRepository trainingSectionRepository,  PasswordEncoder passwordEncoder, WalletRepository walletRepository) {
+    public Init(UserRepository userRepository, RoleRepository roleRepository, EmployeeRepository employeeRepository, PromoCodeRepository promoCodeRepository, TrainingGroupCategoryRepository trainingGroupCategoryRepository, TrainingGroupRepository trainingGroupRepository, PasswordEncoder passwordEncoder, WalletRepository walletRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.promoCodeRepository = promoCodeRepository;
         this.trainingGroupCategoryRepository = trainingGroupCategoryRepository;
-        this.trainingSectionRepository = trainingSectionRepository;
+        this.trainingGroupRepository = trainingGroupRepository;
         this.passwordEncoder = passwordEncoder;
         this.walletRepository = walletRepository;
     }
@@ -68,31 +66,31 @@ public class Init implements CommandLineRunner {
 //                .roles(roleList)
 //                .build());
 
-        User user = userRepository.save(User.builder()
-                .email("user@gmail.com")
-                .password(passwordEncoder.encode("12345"))
-                .phoneNumber("+996(500)-511-932")
-                .gender("MALE")
-                .birthDate(LocalDate.of(1999,3, 1))
-                .name("Жома")
-                .surname("Акынов")
-                .isActive(1)
-                .roles(userList)
-                .build());
-
-        Wallet walletUser = walletRepository.save(Wallet.builder()
-                .user(user)
-                .requisite("US123")
-                .status(Status.ACTIVE)
-                .balance(new BigDecimal(5000))
-                .build());
-
-        Wallet wallet = walletRepository.save( Wallet.builder()
-                .user(admin)
-                .requisite("AI123")
-                .status(Status.ACTIVE)
-                .balance(new BigDecimal(10000000))
-                .build());
+//        User user = userRepository.save(User.builder()
+//                .email("user@gmail.com")
+//                .password(passwordEncoder.encode("12345"))
+//                .phoneNumber("+996(500)-511-932")
+//                .gender("MALE")
+//                .birthDate(LocalDate.of(1999,3, 1))
+//                .name("Жома")
+//                .surname("Акынов")
+//                .isActive(1)
+//                .roles(userList)
+//                .build());
+//
+//        Wallet walletUser = walletRepository.save(Wallet.builder()
+//                .user(user)
+//                .requisite("US123")
+//                .status(Status.ACTIVE)
+//                .balance(new BigDecimal(5000))
+//                .build());
+//
+//        Wallet wallet = walletRepository.save( Wallet.builder()
+//                .user(admin)
+//                .requisite("AI123")
+//                .status(Status.ACTIVE)
+//                .balance(new BigDecimal(10000000))
+//                .build());
 //
 //        User ka4ok = userRepository.save(User.builder()
 //                .email("ka4ok@gmail.com")

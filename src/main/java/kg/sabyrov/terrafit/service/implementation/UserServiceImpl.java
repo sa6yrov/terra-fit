@@ -1,10 +1,12 @@
 package kg.sabyrov.terrafit.service.implementation;
 
+import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
 import kg.sabyrov.terrafit.entity.Role;
 import kg.sabyrov.terrafit.entity.User;
-import kg.sabyrov.terrafit.dto.userDto.UserModel;
+import kg.sabyrov.terrafit.dto.userDto.UserDto;
 import kg.sabyrov.terrafit.entity.Wallet;
 import kg.sabyrov.terrafit.enums.Status;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserRegisterException;
 import kg.sabyrov.terrafit.models.ResponseMessage;
 import kg.sabyrov.terrafit.repository.RoleRepository;
@@ -48,24 +50,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseMessage create(UserModel userModel) throws UserRegisterException {
-        if(!checkUserModelForUnique(userModel.getEmail())) {
+    public ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException {
+        if(!checkUserModelForUnique(userDto.getEmail())) {
             throw  new UserRegisterException("User with this email already exists");
         }
 
-        User user = saveAndGetUserByUserModel(userModel);
+        User user = saveAndGetUserByUserModel(userDto);
         createWalletForUser(user);
 
         return new ResponseMessage(user.getEmail() + " was successfully registered");
 
     }
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) throws UserNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if(user == null) throw new UserNotFoundException("User with '" + email + "'  email not found");
+        return user;
     }
     @Override
-    public User findBySurnameAndName(String surname, String name) {
-        return userRepository.findBySurnameAndName(surname, name);
+    public List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException {
+        List<User> users = userRepository.findBySurnameAndName(userFindDto.getSurname(), userFindDto.getName());
+        if(users == null) throw new UserNotFoundException("User with surname: '" + userFindDto.getSurname() + "' and name: '" + userFindDto.getName() + "' not found");
+        return users;
+    }
+
+    @Override
+    public User deActivateUser(String email) throws UserNotFoundException {
+        User user = findByEmail(email);
+        user.setIsActive(0);
+        return save(user);
     }
 
     @Override
@@ -78,20 +91,20 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
-    private User saveAndGetUserByUserModel(UserModel userModel){
+    private User saveAndGetUserByUserModel(UserDto userDto){
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> roleList = new ArrayList<>();
         roleList.add(roleUser);
 
         User user = User.builder()
-                .email(userModel.getEmail())
-                .name(userModel.getName())
-                .surname(userModel.getSurname())
-                .password(passwordEncoder.encode(userModel.getPassword()))
-                .birthDate(userModel.getBirthDate())
-                .gender(userModel.getGender())
+                .email(userDto.getEmail())
+                .name(userDto.getName())
+                .surname(userDto.getSurname())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .birthDate(userDto.getBirthDate())
+                .gender(userDto.getGender())
                 .isActive(1)
-                .phoneNumber(userModel.getPhoneNumber())
+                .phoneNumber(userDto.getPhoneNumber())
                 .roles(roleList)
                 .build();
         return save(user);
@@ -108,7 +121,7 @@ public class UserServiceImpl implements UserService {
         walletService.save(wallet);
     }
 
-    private boolean checkUserModelForUnique(String email){
+    private boolean checkUserModelForUnique(String email) throws UserNotFoundException {
         return findByEmail(email) == null;
     }
 

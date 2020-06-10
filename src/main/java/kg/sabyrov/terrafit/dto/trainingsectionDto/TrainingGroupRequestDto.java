@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TrainingSectionRequestDto {
+public class TrainingGroupRequestDto {
     String name;
     String employeeEmail;
     BigDecimal subscriptionPrice;

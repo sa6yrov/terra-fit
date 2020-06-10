@@ -3,11 +3,9 @@ package kg.sabyrov.terrafit.entity;
 import kg.sabyrov.terrafit.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Data
@@ -25,7 +23,7 @@ public class Subscription extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "training_section_id", referencedColumnName = "id", nullable = false)
-    TrainingSection trainingSection;
+    TrainingGroup trainingGroup;
 
     @Column(name = "session_quantity", nullable = false)
     Integer sessionQuantity;

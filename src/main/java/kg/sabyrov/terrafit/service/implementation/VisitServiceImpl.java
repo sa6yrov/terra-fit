@@ -60,8 +60,8 @@ public class VisitServiceImpl implements VisitService {
 
 
         SubscriptionResponseDto subscriptionResponseDto = SubscriptionResponseDto.builder()
-                .trainingName(subscription.getTrainingSection().getName())
-                .price(subscription.getTrainingSection().getSubscriptionPrice())
+                .trainingName(subscription.getTrainingGroup().getName())
+                .price(subscription.getTrainingGroup().getSubscriptionPrice())
                 .discountPercentages(subscription.getDiscountPercentages())
                 .totalAmount(subscription.getTotalAmount())
                 .sessionQuantity(subscription.getSessionQuantity())
