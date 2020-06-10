@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
 import kg.sabyrov.terrafit.dto.employeeDto.EmployeeRequestDto;
+import kg.sabyrov.terrafit.dto.employeeDto.EmployeeResponseDto;
 import kg.sabyrov.terrafit.entity.Employee;
 import kg.sabyrov.terrafit.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
-            return new ResponseEntity<List<Employee>>(employeeService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(employeeService.findAllModels(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -1,6 +1,6 @@
 package kg.sabyrov.terrafit.service.implementation;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseModel;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
 import kg.sabyrov.terrafit.dto.userDto.UserSubscriptionResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.User;
@@ -59,7 +59,7 @@ public class VisitServiceImpl implements VisitService {
 
 
 
-        SubscriptionResponseModel subscriptionResponseModel = SubscriptionResponseModel.builder()
+        SubscriptionResponseDto subscriptionResponseDto = SubscriptionResponseDto.builder()
                 .trainingName(subscription.getTrainingSection().getName())
                 .price(subscription.getTrainingSection().getSubscriptionPrice())
                 .discountPercentages(subscription.getDiscountPercentages())
@@ -75,7 +75,7 @@ public class VisitServiceImpl implements VisitService {
                 .birthDate(user.getBirthDate())
                 .gender(user.getGender())
                 .phoneNumber(user.getPhoneNumber())
-                .subscriptionResponseModel(subscriptionResponseModel)
+                .subscriptionResponseDto(subscriptionResponseDto)
                 .build();
     }
 

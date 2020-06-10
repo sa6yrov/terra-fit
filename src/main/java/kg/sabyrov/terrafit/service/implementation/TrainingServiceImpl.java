@@ -1,7 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
-import kg.sabyrov.terrafit.dto.trainingsectionDto.TrainingSectionRequestModel;
-import kg.sabyrov.terrafit.dto.trainingsectionDto.TrainingSectionResponseModel;
+import kg.sabyrov.terrafit.dto.trainingsectionDto.TrainingSectionRequestDto;
+import kg.sabyrov.terrafit.dto.trainingsectionDto.TrainingSectionResponseDto;
 import kg.sabyrov.terrafit.entity.Employee;
 import kg.sabyrov.terrafit.entity.TrainingSection;
 import kg.sabyrov.terrafit.repository.TrainingSectionRepository;
@@ -30,21 +30,21 @@ public class TrainingServiceImpl implements TrainingSectionService {
     }
 
     @Override
-    public TrainingSectionResponseModel create(TrainingSectionRequestModel trainingSectionRequestModel) {
-        TrainingSection trainingSection = saveAndGetTrainingSectionFromDb(trainingSectionRequestModel);
+    public TrainingSectionResponseDto create(TrainingSectionRequestDto trainingSectionRequestDto) {
+        TrainingSection trainingSection = saveAndGetTrainingSectionFromDb(trainingSectionRequestDto);
 
-        return TrainingSectionResponseModel.builder()
+        return TrainingSectionResponseDto.builder()
                 .name(trainingSection.getName())
                 .coachName(trainingSection.getEmployee().getUser().getName())
                 .status(trainingSection.getStatus())
                 .build();
 
     }
-    private TrainingSection saveAndGetTrainingSectionFromDb(TrainingSectionRequestModel trainingSectionRequestModel){
+    private TrainingSection saveAndGetTrainingSectionFromDb(TrainingSectionRequestDto trainingSectionRequestDto){
         TrainingSection trainingSection = TrainingSection.builder()
-                .name(trainingSectionRequestModel.getName())
-                .employee(getEmployeeFromDb(trainingSectionRequestModel.getEmployeeEmail()))
-                .status(trainingSectionRequestModel.getStatus())
+                .name(trainingSectionRequestDto.getName())
+                .employee(getEmployeeFromDb(trainingSectionRequestDto.getEmployeeEmail()))
+                .status(trainingSectionRequestDto.getStatus())
                 .build();
         return save(trainingSection);
     }
@@ -62,18 +62,18 @@ public class TrainingServiceImpl implements TrainingSectionService {
 
 
     @Override
-    public List<TrainingSectionResponseModel> getAllModel() {
+    public List<TrainingSectionResponseDto> getAllModel() {
         List<TrainingSection> trainingSections = getAll();
-        List<TrainingSectionResponseModel> trainingSectionResponseModels = new ArrayList<>();
+        List<TrainingSectionResponseDto> trainingSectionResponseDtos = new ArrayList<>();
 
         for (TrainingSection t : trainingSections) {
-            trainingSectionResponseModels.add(TrainingSectionResponseModel.builder()
+            trainingSectionResponseDtos.add(TrainingSectionResponseDto.builder()
                     .name(t.getName())
                     .coachName(t.getEmployee().getUser().getName())
                     .status(t.getStatus())
                     .build());
         }
-        return trainingSectionResponseModels;
+        return trainingSectionResponseDtos;
     }
 
     private Employee getEmployeeFromDb(String email){

@@ -1,12 +1,10 @@
 package kg.sabyrov.terrafit.dto.userDto;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseModel;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Builder
@@ -20,5 +18,5 @@ public class UserSubscriptionResponseDto {
     String phoneNumber;
     LocalDate birthDate;
     String gender;
-    SubscriptionResponseModel subscriptionResponseModel;
+    SubscriptionResponseDto subscriptionResponseDto;
 }

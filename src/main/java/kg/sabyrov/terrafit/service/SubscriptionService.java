@@ -1,10 +1,12 @@
 package kg.sabyrov.terrafit.service;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestModel;
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseModel;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 
-public interface SubscriptionService extends BaseService<Subscription> {
+import java.util.List;
 
-    SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel);
+public interface SubscriptionService extends BaseService<Subscription> {
+    List<SubscriptionResponseDto> getAllModels();
+    SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto);
 }

@@ -1,11 +1,15 @@
 package kg.sabyrov.terrafit.service.implementation;
 
+import kg.sabyrov.terrafit.dto.personParamDto.PersonParamRequestDto;
 import kg.sabyrov.terrafit.dto.personParamDto.PersonParamResponseDto;
 import kg.sabyrov.terrafit.entity.PersonParam;
+import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.repository.PersonParamRepository;
 import kg.sabyrov.terrafit.service.PersonParamService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,10 +43,12 @@ public class PersonParamServiceImpl implements PersonParamService {
         return personParamRepository.findAll();
     }
 
+
     @Override
-    public List<PersonParamResponseDto> findAll() {
+    public List<PersonParamResponseDto> findAllByUser(String email) {
         List<PersonParamResponseDto> personParamResponseDtos = new ArrayList<>();
-        List<PersonParam> personParams = getAll();
+        User user = userService.findByEmail(email);
+        List<PersonParam> personParams = personParamRepository.findAllByUser(user);
 
         for (PersonParam p : personParams) {
             personParamResponseDtos.add(PersonParamResponseDto.builder()
@@ -59,5 +65,41 @@ public class PersonParamServiceImpl implements PersonParamService {
                     .build());
         }
         return personParamResponseDtos;
+    }
+
+    @Override
+    public PersonParamResponseDto create(PersonParamRequestDto personParamRequestDto) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User user = userService.findByEmail(email);
+        PersonParam personParam = save(PersonParam.builder()
+                .user(user)
+                .height(personParamRequestDto.getHeight())
+                .weight(personParamRequestDto.getWeight())
+                .shoulderWidth(personParamRequestDto.getShoulderWidth())
+                .hipGirth(personParamRequestDto.getHipGirth())
+                .bicepGirth(personParamRequestDto.getBicepGirth())
+                .chestGirth(personParamRequestDto.getChestGirth())
+                .neckGirth(personParamRequestDto.getNeckGirth())
+                .noteGirth(personParamRequestDto.getNoteGirth())
+                .waistGirth(personParamRequestDto.getWaistGirth())
+                .build());
+
+        return getPersonParamResponseObject(personParam);
+    }
+
+    private PersonParamResponseDto getPersonParamResponseObject(PersonParam personParam){
+        return PersonParamResponseDto.builder()
+                .height(personParam.getHeight())
+                .weight(personParam.getWeight())
+                .shoulderWidth(personParam.getShoulderWidth())
+                .noteGirth(personParam.getNoteGirth())
+                .neckGirth(personParam.getNeckGirth())
+                .hipGirth(personParam.getHipGirth())
+                .chestGirth(personParam.getChestGirth())
+                .bicepGirth(personParam.getBicepGirth())
+                .waistGirth(personParam.getWaistGirth())
+                .createdDate(personParam.getCreatedDate())
+                .build();
     }
 }

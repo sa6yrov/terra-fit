@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,25 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .phoneNumber(employee.getUser().getPhoneNumber())
                 .gender(employee.getUser().getGender())
                 .build();
+    }
+
+    @Override
+    public List<EmployeeResponseDto> findAllModels() {
+        List<Employee> employees = getAll();
+        List<EmployeeResponseDto> employeeResponseDtos = new ArrayList<>();
+
+        for (Employee e : employees) {
+            employeeResponseDtos.add(EmployeeResponseDto.builder()
+                    .email(e.getUser().getEmail())
+                    .name(e.getUser().getName())
+                    .surname(e.getUser().getSurname())
+                    .gender(e.getUser().getGender())
+                    .phoneNumber(e.getUser().getPhoneNumber())
+                    .birthDate(e.getUser().getBirthDate())
+                    .position(e.getPosition())
+                    .build());
+        }
+        return employeeResponseDtos;
     }
 
     private User getUserFromDb(String email) throws UserNotFoundException {

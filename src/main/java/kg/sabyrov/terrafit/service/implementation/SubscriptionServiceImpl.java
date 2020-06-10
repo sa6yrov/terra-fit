@@ -1,19 +1,23 @@
 package kg.sabyrov.terrafit.service.implementation;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestModel;
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseModel;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
 import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingSection;
+import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.repository.SubscriptionRepository;
 import kg.sabyrov.terrafit.service.PromoCodeService;
 import kg.sabyrov.terrafit.service.SubscriptionService;
 import kg.sabyrov.terrafit.service.TrainingSectionService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,22 +55,46 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     @Override
-    public SubscriptionResponseModel create(SubscriptionRequestModel subscriptionRequestModel) {
-        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestModel.getTrainingSectionId());
-        Subscription subscription = Subscription.builder()
+    public List<SubscriptionResponseDto> getAllModels() {
+        List<Subscription> subscriptions = getAll();
+        List<SubscriptionResponseDto> subscriptionResponses = new ArrayList<>();
+
+        for (Subscription s : subscriptions) {
+            subscriptionResponses.add(SubscriptionResponseDto.builder()
+                    .trainingName(s.getTrainingSection().getName())
+                    .userEmail(s.getUser().getEmail())
+                    .subscriptionId(s.getId())
+                    .sessionQuantity(s.getSessionQuantity())
+                    .price(s.getTrainingSection().getSubscriptionPrice())
+                    .discountPercentages(s.getDiscountPercentages())
+                    .totalAmount(s.getTotalAmount())
+                    .build());
+        }
+
+        return subscriptionResponses;
+    }
+
+    @Override
+    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) {
+        TrainingSection trainingSection = trainingSectionService.getById(subscriptionRequestDto.getTrainingSectionId());
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User user = userService.findByEmail(email);
+        Subscription subscription = save(Subscription.builder()
                 .trainingSection(trainingSection)
-                .sessionQuantity(subscriptionRequestModel.getSessionQuantity())
-                .discountPercentages(0)
-                .totalAmount(getTotalPrice(trainingSection, subscriptionRequestModel))
-                .build();
-        return null;
+                .user(user)
+                .sessionQuantity(subscriptionRequestDto.getSessionQuantity())
+                .discountPercentages(getDiscountPercentages(subscriptionRequestDto.getPromoCode()))
+                .totalAmount(getTotalPrice(trainingSection, subscriptionRequestDto))
+                .build());
+        return getSubscriptionResponse(subscription);
 
     }
-    private BigDecimal getTotalPrice(TrainingSection trainingSection,SubscriptionRequestModel subscriptionRequestModel){
-        if(trainingSection.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestModel.getSessionQuantity() == 1) return new BigDecimal(200);
-        if(trainingSection.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestModel.getSessionQuantity() == 1) return new BigDecimal(300);
-        BigDecimal discountPrice = (trainingSection.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestModel.getSessionQuantity())))
-                    .multiply(new BigDecimal(100 / getDiscountPercentages(subscriptionRequestModel.getPromoCode())));
+    private BigDecimal getTotalPrice(TrainingSection trainingSection, SubscriptionRequestDto subscriptionRequestDto){
+        if(trainingSection.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
+        if(trainingSection.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
+        BigDecimal discountPrice = (trainingSection.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
+                    .multiply(new BigDecimal(100 / getDiscountPercentages(subscriptionRequestDto.getPromoCode())));
         return trainingSection.getSubscriptionPrice().subtract(discountPrice);
     }
 
@@ -83,4 +111,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         PromoCode promoCodeFromDb = promoCodeService.findByName(promoCode);
         return promoCodeFromDb.getDiscountPercentages();
     }
+
+    private SubscriptionResponseDto getSubscriptionResponse(Subscription subscription){
+        return SubscriptionResponseDto.builder()
+                .trainingName(subscription.getTrainingSection().getName())
+                .userEmail(subscription.getUser().getEmail())
+                .sessionQuantity(subscription.getSessionQuantity())
+                .subscriptionId(subscription.getId())
+                .price(subscription.getTrainingSection().getSubscriptionPrice())
+                .discountPercentages(subscription.getDiscountPercentages())
+                .totalAmount(subscription.getTotalAmount())
+                .build();
+    }
+
 }
