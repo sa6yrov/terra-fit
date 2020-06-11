@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN");
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

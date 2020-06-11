@@ -6,6 +6,8 @@ import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.repository.SubscriptionRepository;
 import kg.sabyrov.terrafit.service.PromoCodeService;
 import kg.sabyrov.terrafit.service.SubscriptionService;
@@ -42,9 +44,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Subscription getById(Long id) {
+    public Subscription getById(Long id) throws SubscriptionNotFoundException {
         Optional<Subscription> subscriptionOptional = subscriptionRepository.findById(id);
-        return subscriptionOptional.orElse(null);
+        if(subscriptionOptional.orElse(null) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
+        return subscriptionOptional.get();
     }
 
     @Override
@@ -75,7 +78,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) {
+    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws UserNotFoundException, SubscriptionNotFoundException {
         TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingSectionId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
@@ -90,6 +93,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return getSubscriptionResponse(subscription);
 
     }
+
+    @Override
+    public SubscriptionResponseDto getModelById(Long id) throws SubscriptionNotFoundException {
+        Subscription subscription = getById(id);
+        return SubscriptionResponseDto.builder()
+                .subscriptionId(subscription.getId())
+                .userEmail(subscription.getUser().getEmail())
+                .trainingName(subscription.getTrainingGroup().getName())
+                .sessionQuantity(subscription.getSessionQuantity())
+                .price(subscription.getTrainingGroup().getSubscriptionPrice())
+                .discountPercentages(subscription.getDiscountPercentages())
+                .totalAmount(subscription.getTotalAmount())
+                .status(subscription.getStatus())
+                .build();
+    }
+
     private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto){
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
