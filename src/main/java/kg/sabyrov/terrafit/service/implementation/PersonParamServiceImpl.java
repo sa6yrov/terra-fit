@@ -4,6 +4,7 @@ import kg.sabyrov.terrafit.dto.personParamDto.PersonParamRequestDto;
 import kg.sabyrov.terrafit.dto.personParamDto.PersonParamResponseDto;
 import kg.sabyrov.terrafit.entity.PersonParam;
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.repository.PersonParamRepository;
 import kg.sabyrov.terrafit.service.PersonParamService;
 import kg.sabyrov.terrafit.service.UserService;
@@ -45,7 +46,10 @@ public class PersonParamServiceImpl implements PersonParamService {
 
 
     @Override
-    public List<PersonParamResponseDto> findAllByUser(String email) {
+    public List<PersonParamResponseDto> findAllByUser() throws UserNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+
         List<PersonParamResponseDto> personParamResponseDtos = new ArrayList<>();
         User user = userService.findByEmail(email);
         List<PersonParam> personParams = personParamRepository.findAllByUser(user);
@@ -68,7 +72,7 @@ public class PersonParamServiceImpl implements PersonParamService {
     }
 
     @Override
-    public PersonParamResponseDto create(PersonParamRequestDto personParamRequestDto) {
+    public PersonParamResponseDto create(PersonParamRequestDto personParamRequestDto) throws UserNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);

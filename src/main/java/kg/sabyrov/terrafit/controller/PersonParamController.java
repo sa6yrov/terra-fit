@@ -20,9 +20,9 @@ public class PersonParamController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(Principal principal){
+    public ResponseEntity<?> getAll(){
         try {
-            return new ResponseEntity<>(personParamService.findAllByUser(principal.getName()), HttpStatus.OK);
+            return new ResponseEntity<>(personParamService.findAllByUser(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

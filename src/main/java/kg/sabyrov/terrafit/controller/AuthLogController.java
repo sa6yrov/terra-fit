@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("auth-log")
 public class AuthLogController {
 
+    private  final AuthLogService authLogService;
+
     @Autowired
-    private AuthLogService authLogService;
+    public AuthLogController(AuthLogService authLogService) {
+        this.authLogService = authLogService;
+    }
 
     @GetMapping
     public List<AuthLog> getAll(){

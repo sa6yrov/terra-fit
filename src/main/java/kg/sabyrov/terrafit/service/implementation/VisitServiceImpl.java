@@ -79,11 +79,11 @@ public class VisitServiceImpl implements VisitService {
                 .build();
     }
 
-    private boolean checkCode(Long id){
+    private boolean checkCode(Long id) throws SubscriptionNotFoundException {
         return subscriptionService.getById(id) == null;
     }
 
-    private Subscription visitProcess(Long id){
+    private Subscription visitProcess(Long id) throws SubscriptionNotFoundException {
         Subscription subscription = subscriptionService.getById(id);
         subscription.setSessionQuantity(subscription.getSessionQuantity() - 1);
         return subscription;

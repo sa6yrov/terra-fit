@@ -30,14 +30,16 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsService jwtUserDetailsService;
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Autowired
-    private UserDetailsService jwtUserDetailsService;
-
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
+    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtTokenFilter jwtTokenFilter) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.jwtTokenFilter = jwtTokenFilter;
+    }
 
     @Value("${jwt.get.token.uri}")
     private String loginPath;

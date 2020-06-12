@@ -3,6 +3,7 @@ package kg.sabyrov.terrafit.controller;
 import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.JwtAuthenticationException;
+import kg.sabyrov.terrafit.jwt.AuthenticationService;
 import kg.sabyrov.terrafit.models.JwtTokenRequest;
 import kg.sabyrov.terrafit.models.JwtTokenResponse;
 import kg.sabyrov.terrafit.service.AuthLogService;
@@ -27,14 +28,14 @@ public class JwtAuthController {
     private String tokenHeader;
 
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
     private final JwtUtil jwtUtil;
     private final UserDetailsService jwtUserDetailsService;
     private final AuthLogService authLogService;
 
     @Autowired
-    public JwtAuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserDetailsService jwtUserDetailsService, AuthLogService authLogService) {
-        this.authenticationManager = authenticationManager;
+    public JwtAuthController(AuthenticationService authenticationService, JwtUtil jwtUtil, UserDetailsService jwtUserDetailsService, AuthLogService authLogService) {
+        this.authenticationService = authenticationService;
         this.jwtUtil = jwtUtil;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.authLogService = authLogService;
@@ -43,28 +44,18 @@ public class JwtAuthController {
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
     public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) {
         try {
-            authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
+            authenticationService.authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
 
             final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(jwtTokenRequest.getEmail());
             final String token = jwtUtil.generateToken(userDetails);
 
             authLogService.create(jwtTokenRequest.getEmail(), Status.OK);
             return ResponseEntity.ok(new JwtTokenResponse(token));
-        }catch (Exception e){
+        } catch (Exception e) {
             authLogService.create(jwtTokenRequest.getEmail(), Status.FAILED);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-    }
-
-    private void authenticate(String email, String password) throws JwtAuthenticationException {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        }catch (DisabledException e){
-            throw new JwtAuthenticationException("USER_DISABLED");
-        }catch (BadCredentialsException e){
-            throw new JwtAuthenticationException("INVALID_CREDENTIALS");
-        }
     }
 
 }
