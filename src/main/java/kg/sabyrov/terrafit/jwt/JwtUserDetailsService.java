@@ -8,6 +8,7 @@ import kg.sabyrov.terrafit.service.RoleService;
 import kg.sabyrov.terrafit.service.UserService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,10 +29,11 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) {
         User user = userService.findByEmail(email);
+//        User user = userService.findByEmailAndIsActive(email, 1);
         if(user == null){
             return null;
         }
-
+        if(user.getIsActive() != 1) throw new DisabledException("User is inactive");
         return JwtUser.builder()
                 .id(user.getId())
                 .email(user.getEmail())
