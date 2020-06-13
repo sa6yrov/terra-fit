@@ -19,14 +19,10 @@ import java.util.Optional;
 
 @Service
 public class PersonParamServiceImpl implements PersonParamService {
-    private final PersonParamRepository personParamRepository;
-    private final UserService userService;
-
     @Autowired
-    public PersonParamServiceImpl(PersonParamRepository personParamRepository, UserService userService) {
-        this.personParamRepository = personParamRepository;
-        this.userService = userService;
-    }
+    private PersonParamRepository personParamRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     public PersonParam save(PersonParam personParam) {

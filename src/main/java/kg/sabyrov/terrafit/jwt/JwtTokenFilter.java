@@ -22,9 +22,9 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
-
     @Autowired
     private JwtUtil jwtUtil;
+
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;

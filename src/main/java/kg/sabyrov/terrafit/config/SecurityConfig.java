@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,17 +30,12 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final UserDetailsService jwtUserDetailsService;
-    private final JwtTokenFilter jwtTokenFilter;
-
     @Autowired
-    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtTokenFilter jwtTokenFilter) {
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtUserDetailsService = jwtUserDetailsService;
-        this.jwtTokenFilter = jwtTokenFilter;
-    }
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    private UserDetailsService jwtUserDetailsService;
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
 
     @Value("${jwt.get.token.uri}")
     private String loginPath;
@@ -54,14 +50,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .anyRequest().authenticated();
-        http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN");
+                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/role").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+//        http.authorizeRequests()
+//                .antMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN");
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

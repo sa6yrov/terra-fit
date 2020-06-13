@@ -2,6 +2,7 @@ package kg.sabyrov.terrafit.controller;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
 import kg.sabyrov.terrafit.service.SubscriptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +10,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/subscription")
 public class SubscriptionController {
-    private final SubscriptionService subscriptionService;
-
-
-    public SubscriptionController(SubscriptionService subscriptionService) {
-        this.subscriptionService = subscriptionService;
-    }
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     @GetMapping
     public ResponseEntity<?> getAll(){

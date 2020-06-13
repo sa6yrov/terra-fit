@@ -11,12 +11,8 @@ import java.util.Optional;
 
 @Service
 public class TrainingGroupCategoryServiceImpl implements TrainingGroupCategoryService {
-    private final TrainingGroupCategoryRepository trainingGroupCategoryRepository;
-
     @Autowired
-    public TrainingGroupCategoryServiceImpl(TrainingGroupCategoryRepository trainingGroupCategoryRepository) {
-        this.trainingGroupCategoryRepository = trainingGroupCategoryRepository;
-    }
+    private TrainingGroupCategoryRepository trainingGroupCategoryRepository;
 
     @Override
     public TrainingGroupCategory save(TrainingGroupCategory trainingGroupCategory) {

@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/visit")
 public class VisitController {
-    private final VisitService visitService;
-
     @Autowired
-    public VisitController(VisitService visitService) {
-        this.visitService = visitService;
-    }
+    private VisitService visitService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Long id){

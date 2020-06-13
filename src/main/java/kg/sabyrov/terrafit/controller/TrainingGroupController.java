@@ -10,12 +10,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/training-group")
 public class TrainingGroupController {
-    private final TrainingGroupService trainingGroupService;
-
     @Autowired
-    public TrainingGroupController(TrainingGroupService trainingGroupService) {
-        this.trainingGroupService = trainingGroupService;
-    }
+    private TrainingGroupService trainingGroupService;
 
     @GetMapping
     public ResponseEntity<?> getAllModels(){

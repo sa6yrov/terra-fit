@@ -3,6 +3,7 @@ package kg.sabyrov.terrafit.service.implementation;
 import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.enums.Status;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.repository.AuthLogRepository;
 import kg.sabyrov.terrafit.service.AuthLogService;
 import kg.sabyrov.terrafit.service.UserService;
@@ -16,14 +17,10 @@ import java.util.Optional;
 @Service
 public class AuthLogServiceImpl implements AuthLogService {
 
-    private final AuthLogRepository authLogRepository;
-    private final UserService userService;
-
     @Autowired
-    public AuthLogServiceImpl(AuthLogRepository authLogRepository, UserService userService) {
-        this.authLogRepository = authLogRepository;
-        this.userService = userService;
-    }
+    private AuthLogRepository authLogRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     public AuthLog save(AuthLog authLog) {
@@ -42,7 +39,7 @@ public class AuthLogServiceImpl implements AuthLogService {
     }
 
     @Override
-    public AuthLog create(String email, Status status) {
+    public AuthLog create(String email, Status status) throws UserNotFoundException {
         User user = userService.findByEmail(email);
         AuthLog authLog = AuthLog.builder()
                 .user(user)

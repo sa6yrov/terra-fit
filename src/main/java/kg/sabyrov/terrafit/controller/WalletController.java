@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/wallet")
 public class WalletController {
-    private final WalletService walletService;
-
     @Autowired
-    public WalletController(WalletService walletService) {
-        this.walletService = walletService;
-    }
+    private WalletService walletService;
 
     @GetMapping("/my")
     public ResponseEntity<?> getWallet(){

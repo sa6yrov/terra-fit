@@ -17,16 +17,11 @@ import java.util.Optional;
 
 @Service
 public class VisitServiceImpl implements VisitService {
-
-    private final VisitRepository visitRepository;
-    private final SubscriptionService subscriptionService;
-
-
     @Autowired
-    public VisitServiceImpl(VisitRepository visitRepository, SubscriptionService subscriptionService) {
-        this.visitRepository = visitRepository;
-        this.subscriptionService = subscriptionService;
-    }
+    private VisitRepository visitRepository;
+    @Autowired
+    private SubscriptionService subscriptionService;
+
 
     @Override
     public Visit save(Visit visit) {

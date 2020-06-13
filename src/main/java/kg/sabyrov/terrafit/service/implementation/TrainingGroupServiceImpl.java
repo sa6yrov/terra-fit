@@ -16,13 +16,11 @@ import java.util.Optional;
 
 @Service
 public class TrainingGroupServiceImpl implements TrainingGroupService {
-    private final TrainingGroupRepository trainingGroupRepository;
-    private final EmployeeService employeeService;
     @Autowired
-    public TrainingGroupServiceImpl(TrainingGroupRepository trainingGroupRepository, EmployeeService employeeService) {
-        this.trainingGroupRepository = trainingGroupRepository;
-        this.employeeService = employeeService;
-    }
+    private TrainingGroupRepository trainingGroupRepository;
+    @Autowired
+    private EmployeeService employeeService;
+
 
     @Override
     public TrainingGroup save(TrainingGroup trainingGroup) {

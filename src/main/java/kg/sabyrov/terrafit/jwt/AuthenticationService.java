@@ -10,12 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
-    private final AuthenticationManager authenticationManager;
-
     @Autowired
-    public AuthenticationService(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+    private AuthenticationManager authenticationManager;
 
     public void authenticate(String email, String password) throws JwtAuthenticationException {
         try {

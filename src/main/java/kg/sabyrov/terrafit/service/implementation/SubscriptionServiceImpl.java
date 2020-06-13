@@ -25,18 +25,14 @@ import java.util.Optional;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-    private final SubscriptionRepository subscriptionRepository;
-    private final TrainingGroupService trainingGroupService;
-    private final UserService userService;
-    private final PromoCodeService promoCodeService;
-
     @Autowired
-    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TrainingGroupService trainingGroupService, UserService userService, PromoCodeService promoCodeService) {
-        this.subscriptionRepository = subscriptionRepository;
-        this.trainingGroupService = trainingGroupService;
-        this.userService = userService;
-        this.promoCodeService = promoCodeService;
-    }
+    private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private TrainingGroupService trainingGroupService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PromoCodeService promoCodeService;
 
     @Override
     public Subscription save(Subscription subscription) {

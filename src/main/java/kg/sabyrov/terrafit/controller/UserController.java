@@ -12,13 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private final UserService userService;
-
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<?> getAll(){
@@ -55,15 +50,15 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @PostMapping("/find")
-    public ResponseEntity<?> search(@RequestBody String email){
-        try {
-            return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//
+//    @PostMapping("/find")
+//    public ResponseEntity<?> search(@RequestBody String email){
+//        try {
+//            return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
     @GetMapping("/check")

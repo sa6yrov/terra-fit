@@ -11,12 +11,8 @@ import java.util.Optional;
 
 @Service
 public class PromoCodeServiceImpl implements PromoCodeService {
-    private final PromoCodeRepository promoCodeRepository;
-
     @Autowired
-    public PromoCodeServiceImpl(PromoCodeRepository promoCodeRepository) {
-        this.promoCodeRepository = promoCodeRepository;
-    }
+    private PromoCodeRepository promoCodeRepository;
 
     @Override
     public PromoCode save(PromoCode promoCode) {

@@ -18,14 +18,11 @@ import java.util.Optional;
 
 @Service
 public class WalletServiceImpl implements WalletService {
-    private final WalletRepository walletRepository;
-    private final UserService userService;
-
     @Autowired
-    public WalletServiceImpl(WalletRepository walletRepository, UserService userService) {
-        this.walletRepository = walletRepository;
-        this.userService = userService;
-    }
+    private WalletRepository walletRepository;
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public Wallet save(Wallet wallet) {

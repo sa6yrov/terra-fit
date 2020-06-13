@@ -25,18 +25,14 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final WalletService walletService;
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, WalletService walletService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.walletService = walletService;
-    }
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private WalletService walletService;
 
     @Override
     public User save(User user) {
@@ -63,9 +59,8 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User findByEmail(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null) throw new UserNotFoundException("User with '" + email + "'  email not found");
-        return user;
+        //        if(user == null) throw new UserNotFoundException("User with '" + email + "'  email not found");
+        return userRepository.findByEmail(email);
     }
     @Override
     public List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException {
@@ -91,6 +86,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
     private User saveAndGetUserByUserModel(UserDto userDto){
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> roleList = new ArrayList<>();
