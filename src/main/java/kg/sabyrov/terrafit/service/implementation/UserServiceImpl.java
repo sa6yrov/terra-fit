@@ -39,11 +39,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-
-    @Override
-    public User findByEmailAndIsActive(String email, Integer isActive) {
-        return userRepository.findByEmailAndIsActive(email, isActive);
-    }
+//
+//    @Override
+//    public User findByEmailAndIsActive(String email, Integer isActive) {
+//        return userRepository.findByEmailAndIsActive(email, isActive);
+//    }
 
     @Override
     public ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException {

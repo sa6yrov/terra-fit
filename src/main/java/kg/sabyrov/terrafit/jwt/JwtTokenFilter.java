@@ -57,7 +57,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
 
-        if(userDetails == null && !isRequestNotNeedAuth) httpServletRequest.setAttribute("userInActive", "User is inActive");
+//        if(userDetails == null && !isRequestNotNeedAuth) httpServletRequest.setAttribute("userInActive", "User is inActive");
+        if(!userDetails.isEnabled()) httpServletRequest.setAttribute("userInActive", "User is inactive");
         else if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
             if(jwtUtil.validateToken(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -66,7 +67,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
-
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

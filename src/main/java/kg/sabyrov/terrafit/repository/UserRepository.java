@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmailAndIsActive(String email, Integer isActive);
+//    User findByEmailAndIsActive(String email, Integer isActive);
 
     User findByEmail(String email);
 

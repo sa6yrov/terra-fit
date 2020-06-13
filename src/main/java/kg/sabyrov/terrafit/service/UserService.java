@@ -10,7 +10,7 @@ import kg.sabyrov.terrafit.models.ResponseMessage;
 import java.util.List;
 
 public interface UserService extends BaseService<User>{
-    User findByEmailAndIsActive(String email, Integer isActive);
+//    User findByEmailAndIsActive(String email, Integer isActive);
 
     ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException;
 

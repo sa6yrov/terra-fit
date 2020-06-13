@@ -2,9 +2,11 @@ package kg.sabyrov.terrafit.jwt;
 
 import kg.sabyrov.terrafit.entity.Role;
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.repository.UserRepository;
 import kg.sabyrov.terrafit.service.RoleService;
 import kg.sabyrov.terrafit.service.UserService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,11 +24,11 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @SneakyThrows
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userService.findByEmailAndIsActive(email, 1);
+    public UserDetails loadUserByUsername(String email) {
+        User user = userService.findByEmail(email);
         if(user == null){
-//            throw new UsernameNotFoundException(String.format("User with email  '%s' not found", email));
             return null;
         }
 
