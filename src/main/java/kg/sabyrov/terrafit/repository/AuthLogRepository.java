@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthLogRepository extends JpaRepository<AuthLog, Long> {
-    Integer countAllByStatusAndUser(Status status, User user);
+    Integer countAllByStatusAndUserAndRecovery(Status status, User user, boolean isRecovery);
 
 }

@@ -9,5 +9,5 @@ import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 public interface AuthLogService extends BaseService<AuthLog> {
     AuthLog create(String email, Status status);
 
-    Integer countAllByStatusAndUser(Status status, String email);
+    Integer countAllByStatusAndUserAndRecovery(Status status, String email, boolean isRecovery);
 }

@@ -50,8 +50,8 @@ public class AuthLogServiceImpl implements AuthLogService {
     }
 
     @Override
-    public Integer countAllByStatusAndUser(Status status, String email) {
+    public Integer countAllByStatusAndUserAndRecovery(Status status, String email, boolean isRecovery) {
         User user = userService.findByEmail(email);
-        return authLogRepository.countAllByStatusAndUser(status, user);
+        return authLogRepository.countAllByStatusAndUserAndRecovery(status, user, isRecovery);
     }
 }

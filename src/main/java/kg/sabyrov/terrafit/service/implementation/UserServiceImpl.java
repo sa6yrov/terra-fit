@@ -76,6 +76,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User activation(String email) {
+         User user = findByEmail(email);
+         user.setIsActive(1);
+         return save(user);
+    }
+
+    @Override
     public User getById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null);

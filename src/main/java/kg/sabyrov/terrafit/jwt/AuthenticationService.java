@@ -25,7 +25,7 @@ public class AuthenticationService {
 
     public void authenticate(String email, String password) throws JwtAuthenticationException {
         try {
-            if(authLogService.countAllByStatusAndUser(Status.FAILED, email) >= 3){
+            if(authLogService.countAllByStatusAndUserAndRecovery(Status.FAILED, email, false) >= 3){
                 userService.deActivateUser(email);
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));

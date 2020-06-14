@@ -6,6 +6,8 @@ import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @GetMapping
     public ResponseEntity<?> getAll(){
@@ -65,6 +70,14 @@ public class UserController {
     public String check(){
         return SecurityContextHolder.getContext().getAuthentication().getName();
 //        return principal.getName();
+    }
+
+    @PostMapping("/recovery")
+    public ResponseEntity<?> recovery(String email){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Recovering your account");
+        message.setText();
     }
 
 }

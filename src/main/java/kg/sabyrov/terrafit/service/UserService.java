@@ -19,4 +19,6 @@ public interface UserService extends BaseService<User>{
     List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException;
 
     User deActivateUser(String email);
+
+    User activation(String email);
 }
