@@ -14,9 +14,9 @@ public interface UserService extends BaseService<User>{
 
     ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException;
 
-    User findByEmail(String email) throws UserNotFoundException;
+    User findByEmail(String email);
 
     List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException;
 
-    User deActivateUser(String email) throws UserNotFoundException;
+    User deActivateUser(String email);
 }

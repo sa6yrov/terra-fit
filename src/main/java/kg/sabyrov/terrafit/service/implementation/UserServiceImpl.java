@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
-    public User findByEmail(String email) throws UserNotFoundException {
+    public User findByEmail(String email){
         //        if(user == null) throw new UserNotFoundException("User with '" + email + "'  email not found");
         return userRepository.findByEmail(email);
     }
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deActivateUser(String email) throws UserNotFoundException {
+    public User deActivateUser(String email){
         User user = findByEmail(email);
         user.setIsActive(0);
         return save(user);

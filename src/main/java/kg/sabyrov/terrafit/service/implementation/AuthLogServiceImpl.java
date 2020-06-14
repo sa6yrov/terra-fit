@@ -39,7 +39,7 @@ public class AuthLogServiceImpl implements AuthLogService {
     }
 
     @Override
-    public AuthLog create(String email, Status status) throws UserNotFoundException {
+    public AuthLog create(String email, Status status){
         User user = userService.findByEmail(email);
         AuthLog authLog = AuthLog.builder()
                 .user(user)
@@ -47,5 +47,11 @@ public class AuthLogServiceImpl implements AuthLogService {
                 .build();
 
         return save(authLog);
+    }
+
+    @Override
+    public Integer countAllByStatusAndUser(Status status, String email) {
+        User user = userService.findByEmail(email);
+        return authLogRepository.countAllByStatusAndUser(status, user);
     }
 }
