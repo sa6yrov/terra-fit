@@ -3,14 +3,12 @@ package kg.sabyrov.terrafit.service.implementation;
 import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.enums.Status;
-import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.repository.AuthLogRepository;
 import kg.sabyrov.terrafit.service.AuthLogService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +42,7 @@ public class AuthLogServiceImpl implements AuthLogService {
         AuthLog authLog = AuthLog.builder()
                 .user(user)
                 .status(status)
+                .isRecovered(0)
                 .build();
 
         return save(authLog);
@@ -56,8 +55,8 @@ public class AuthLogServiceImpl implements AuthLogService {
 //    }
 
     @Override
-    public Long countByUserAndStatus(Status status, String email) {
+    public Integer countByUserAndStatus(Status status, String email, Integer isRecovered) {
         User user = userService.findByEmail(email);
-        return authLogRepository.countByStatusAndUser(status, user);
+        return authLogRepository.getCount(status, user, isRecovered);
     }
 }

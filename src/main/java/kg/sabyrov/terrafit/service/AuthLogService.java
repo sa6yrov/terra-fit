@@ -11,5 +11,5 @@ public interface AuthLogService extends BaseService<AuthLog> {
 
 //    Integer countAllByStatusAndUserAndRecovery(Status status, String email, boolean isRecovery);
 
-    Long countByUserAndStatus(Status status, String email);
+    Integer countByUserAndStatus(Status status, String email, Integer isRecovered);
 }

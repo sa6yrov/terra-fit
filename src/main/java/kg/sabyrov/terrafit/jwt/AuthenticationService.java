@@ -25,7 +25,7 @@ public class AuthenticationService {
 
     public void authenticate(String email, String password) throws JwtAuthenticationException {
         try {
-            if(authLogService.countByUserAndStatus(Status.FAILED, email) >= 3){
+            if(authLogService.countByUserAndStatus(Status.FAILED, email, 0) >= 3){
                 userService.deActivateUser(email);
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
@@ -34,7 +34,6 @@ public class AuthenticationService {
             authLogService.create(email, Status.FAILED);
             throw new JwtAuthenticationException("USER_DISABLED");
         }catch (BadCredentialsException e){
-            authLogService.create(email, Status.FAILED);
             throw new JwtAuthenticationException("INVALID_CREDENTIALS");
         }
     }

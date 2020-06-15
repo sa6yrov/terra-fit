@@ -5,6 +5,7 @@ import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
 import kg.sabyrov.terrafit.entity.UserConfirmationCode;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.models.ConfirmationCodeModel;
+import kg.sabyrov.terrafit.models.RecoveryModel;
 import kg.sabyrov.terrafit.service.UserConfirmationCodeService;
 import kg.sabyrov.terrafit.service.UserService;
 import kg.sabyrov.terrafit.service.implementation.JavaMailSenderService;
@@ -81,16 +82,16 @@ public class UserController {
     }
 
     @PostMapping("/recovery")
-    public ResponseEntity<?> recovery(String email){
+    public ResponseEntity<?> recovery(@RequestBody RecoveryModel recoveryModel){
         try {
-            return new ResponseEntity<>(javaMailSenderService.sendMessage(email), HttpStatus.OK);
+            return new ResponseEntity<>(javaMailSenderService.sendMessage(recoveryModel.getEmail()), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<?> confirm(ConfirmationCodeModel confirmationCodeModel){
+    public ResponseEntity<?> confirm(@RequestBody ConfirmationCodeModel confirmationCodeModel){
         try {
             return new ResponseEntity<>(userConfirmationCodeService.confirm(confirmationCodeModel), HttpStatus.OK);
         } catch (UserNotFoundException e) {

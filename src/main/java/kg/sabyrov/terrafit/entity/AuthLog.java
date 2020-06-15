@@ -28,7 +28,7 @@ public class AuthLog extends BaseEntity{
     Status status;
 
     @Column(name = "is_recovery")
-    boolean isRecovery;
+    Integer isRecovered;
 
 
 }

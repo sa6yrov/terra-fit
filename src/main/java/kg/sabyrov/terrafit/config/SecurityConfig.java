@@ -75,7 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.POST, loginPath)
-                .antMatchers(HttpMethod.POST, "/user/register");
+                .antMatchers(HttpMethod.POST, "/user/register")
+                .antMatchers(HttpMethod.POST, "/user/recovery")
+                .antMatchers(HttpMethod.POST, "/user/confirm");
 
     }
 
