@@ -2,7 +2,12 @@ package kg.sabyrov.terrafit.controller;
 
 import kg.sabyrov.terrafit.dto.userDto.UserDto;
 import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
+import kg.sabyrov.terrafit.entity.UserConfirmationCode;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
+import kg.sabyrov.terrafit.models.ConfirmationCodeModel;
+import kg.sabyrov.terrafit.service.UserConfirmationCodeService;
 import kg.sabyrov.terrafit.service.UserService;
+import kg.sabyrov.terrafit.service.implementation.JavaMailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +23,10 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private JavaMailSenderService javaMailSenderService;
+
+    @Autowired
+    private UserConfirmationCodeService userConfirmationCodeService;
 
     @GetMapping
     public ResponseEntity<?> getAll(){
@@ -74,10 +82,20 @@ public class UserController {
 
     @PostMapping("/recovery")
     public ResponseEntity<?> recovery(String email){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Recovering your account");
-        message.setText();
+        try {
+            return new ResponseEntity<>(javaMailSenderService.sendMessage(email), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirm(ConfirmationCodeModel confirmationCodeModel){
+        try {
+            return new ResponseEntity<>(userConfirmationCodeService.confirm(confirmationCodeModel), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

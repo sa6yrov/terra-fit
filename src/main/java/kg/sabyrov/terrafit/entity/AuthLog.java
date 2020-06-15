@@ -4,12 +4,14 @@ import kg.sabyrov.terrafit.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,5 +29,6 @@ public class AuthLog extends BaseEntity{
 
     @Column(name = "is_recovery")
     boolean isRecovery;
+
 
 }

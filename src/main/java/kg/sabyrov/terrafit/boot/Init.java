@@ -37,14 +37,14 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        //ROLES
-//        Role roleAdmin = roleRepository.save(Role.builder()
-//                .name("ROLE_ADMIN")
-//                .build());
-//
-//        Role roleUser = roleRepository.save(Role.builder()
-//                .name("ROLE_USER")
-//                .build());
+        //ROLES
+        Role roleAdmin = roleRepository.save(Role.builder()
+                .name("ROLE_ADMIN")
+                .build());
+
+        Role roleUser = roleRepository.save(Role.builder()
+                .name("ROLE_USER")
+                .build());
 //
 //
 //        List<Role> roleList = new ArrayList<>();

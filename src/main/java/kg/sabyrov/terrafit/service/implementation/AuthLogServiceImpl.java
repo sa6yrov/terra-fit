@@ -49,9 +49,15 @@ public class AuthLogServiceImpl implements AuthLogService {
         return save(authLog);
     }
 
+//    @Override
+//    public Integer countAllByStatusAndUserAndRecovery(Status status, String email, boolean isRecovery) {
+//        User user = userService.findByEmail(email);
+//        return authLogRepository.countAllByStatusAndUserAndRecovery(status, user, isRecovery);
+//    }
+
     @Override
-    public Integer countAllByStatusAndUserAndRecovery(Status status, String email, boolean isRecovery) {
+    public Long countByUserAndStatus(Status status, String email) {
         User user = userService.findByEmail(email);
-        return authLogRepository.countAllByStatusAndUserAndRecovery(status, user, isRecovery);
+        return authLogRepository.countByStatusAndUser(status, user);
     }
 }
