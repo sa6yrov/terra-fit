@@ -27,12 +27,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private  PasswordEncoder passwordEncoder;
+
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private JavaMailSenderService javaMailSenderService;
 
     @Override
     public User save(User user) {
@@ -45,15 +51,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException {
+    public ResponseMessage create(UserDto userDto) throws Exception {
         if(!checkUserModelForUnique(userDto.getEmail())) {
             throw  new UserRegisterException("User with this email already exists");
         }
 
         User user = saveAndGetUserByUserModel(userDto);
         createWalletForUser(user);
-
-        return new ResponseMessage(user.getEmail() + " was successfully registered");
+        javaMailSenderService.sendMessage(user.getEmail());
+        return new ResponseMessage(user.getEmail() + ", please check your email and confirm code");
 
     }
     @Override
@@ -105,7 +111,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .birthDate(userDto.getBirthDate())
                 .gender(userDto.getGender())
-                .isActive(1)
+                .isActive(0)
                 .phoneNumber(userDto.getPhoneNumber())
                 .roles(roleList)
                 .build();

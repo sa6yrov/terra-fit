@@ -32,7 +32,7 @@ public class BaseEntity {
         createdDate = LocalDateTime.now();
     }
 
-    @PrePersist
+    @PreUpdate
     public void updatedDate(){
         updatedDate = LocalDateTime.now();
     }

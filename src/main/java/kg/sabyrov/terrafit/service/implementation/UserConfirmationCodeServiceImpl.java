@@ -1,10 +1,13 @@
 package kg.sabyrov.terrafit.service.implementation;
 
+import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.UserConfirmationCode;
+import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.models.ConfirmationCodeModel;
 import kg.sabyrov.terrafit.repository.UserConfirmationCodeRepository;
+import kg.sabyrov.terrafit.service.AuthLogService;
 import kg.sabyrov.terrafit.service.UserConfirmationCodeService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,6 +24,9 @@ public class UserConfirmationCodeServiceImpl implements UserConfirmationCodeServ
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthLogService authLogService;
 
     @Override
     public UserConfirmationCode save(UserConfirmationCode userConfirmationCode) {
@@ -58,14 +64,21 @@ public class UserConfirmationCodeServiceImpl implements UserConfirmationCodeServ
     public String confirm(ConfirmationCodeModel confirmationCodeModel) throws UserNotFoundException {
         User user = getUserFromDb(confirmationCodeModel.getEmail());
         UserConfirmationCode userConfirmationCode = findConfirmationCodeByUser(user);
+
         if(userConfirmationCode.getCode().equals(confirmationCodeModel.getCode())){
             userService.activation(confirmationCodeModel.getEmail());
             userConfirmationCode.setActive(false);
             save(userConfirmationCode);
+            setIsRecoveredActive(authLogService.findAllByUserAndStatus(confirmationCodeModel.getEmail(), Status.FAILED));
         }
-        return "Your account was recovered";
+        return "Your account is active";
     }
-
+    private void setIsRecoveredActive(List<AuthLog> authLogs){
+        for (AuthLog a : authLogs) {
+            a.setIsRecovered(1);
+        }
+        authLogService.saveAll(authLogs);
+    }
     private String generateConfirmationCode(){
         return RandomStringUtils.random(4, true, true);
     }

@@ -59,4 +59,15 @@ public class AuthLogServiceImpl implements AuthLogService {
         User user = userService.findByEmail(email);
         return authLogRepository.getCount(status, user, isRecovered);
     }
+
+    @Override
+    public List<AuthLog> findAllByUserAndStatus(String email, Status status) {
+        User user = userService.findByEmail(email);
+        return authLogRepository.findAllByUserAndStatus(user, status);
+    }
+
+    @Override
+    public List<AuthLog> saveAll(List<AuthLog> authLogs) {
+        return authLogRepository.saveAll(authLogs);
+    }
 }

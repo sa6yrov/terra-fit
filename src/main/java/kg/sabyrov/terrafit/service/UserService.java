@@ -12,7 +12,7 @@ import java.util.List;
 public interface UserService extends BaseService<User>{
     User findByEmailAndIsActive(String email, Integer isActive);
 
-    ResponseMessage create(UserDto userDto) throws UserRegisterException, UserNotFoundException;
+    ResponseMessage create(UserDto userDto) throws Exception;
 
     User findByEmail(String email);
 

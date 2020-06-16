@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AuthLogRepository extends JpaRepository<AuthLog, Long> {
 //    Integer countAllByStatusAndUserAndRecovery(Status status, User user, boolean isRecovery);
@@ -18,5 +20,7 @@ public interface AuthLogRepository extends JpaRepository<AuthLog, Long> {
 
     @Query("select count (a.id) from AuthLog a where a.status = ?1 and a.user = ?2 and a.isRecovered = ?3")
     Integer getCount(Status status, User user, Integer isRecovered);
+
+    List<AuthLog> findAllByUserAndStatus(User user, Status status);
 
 }
