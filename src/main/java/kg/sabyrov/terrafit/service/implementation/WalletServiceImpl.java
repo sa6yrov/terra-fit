@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.walletDto.WalletReplenishDto;
+import kg.sabyrov.terrafit.dto.walletDto.WalletResponseDto;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.Wallet;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
@@ -47,21 +48,37 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet getByUser() throws UserNotFoundException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails)principal).getUsername();
-        User user = userService.findByEmail(email);
-
+    public Wallet getByUser(User user) throws UserNotFoundException {
+        if(user == null) throw new UserNotFoundException("User not found");
         return walletRepository.findByUser(user);
     }
 
     @Override
-    public ResponseMessage replenish(WalletReplenishDto walletReplenishDto) throws UserNotFoundException {
-        Wallet wallet = getByUser();
-        wallet.setBalance(wallet.getBalance().add(walletReplenishDto.getAmount()));
-        save(wallet);
-        return ResponseMessage.builder()
-                .message("Your balance was successfully topped up")
+    public WalletResponseDto getWalletModelByUser() throws UserNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User user = userService.findByEmail(email);
+        Wallet wallet = getByUser(user);
+        return WalletResponseDto.builder()
+                .email(wallet.getUser().getEmail())
+                .requisite(wallet.getRequisite())
+                .balance(wallet.getBalance())
                 .build();
     }
+
+    @Override
+    public String replenish(WalletReplenishDto walletReplenishDto) throws UserNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User user = userService.findByEmail(email);
+
+        Wallet wallet = getByUser(user);
+        wallet.setBalance(wallet.getBalance().add(walletReplenishDto.getAmount()));
+        save(wallet);
+//        return ResponseMessage.builder()
+//                .message("Your balance was successfully topped up")
+//                .build();
+        return "Your balance was successfully topped up";
+    }
+
 }

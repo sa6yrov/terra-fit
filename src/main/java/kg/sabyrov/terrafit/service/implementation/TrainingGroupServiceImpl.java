@@ -66,7 +66,9 @@ public class TrainingGroupServiceImpl implements TrainingGroupService {
 
         for (TrainingGroup t : trainingGroups) {
             trainingGroupResponseDtos.add(TrainingGroupResponseDto.builder()
+                    .id(t.getId())
                     .name(t.getName())
+                    .subscriptionPrice(t.getSubscriptionPrice())
                     .coachName(t.getEmployee().getUser().getName())
                     .status(t.getStatus())
                     .build());

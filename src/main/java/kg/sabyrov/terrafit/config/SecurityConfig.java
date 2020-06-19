@@ -53,10 +53,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/employee"). hasRole("ADMIN")
+
                 .antMatchers(HttpMethod.GET, "/role").hasRole("ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/employee").permitAll()
+                .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/employee").permitAll()
+
+                .antMatchers(HttpMethod.GET, "/training-group").permitAll()
+                .antMatchers(HttpMethod.POST, "/training-group").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/subscription/*").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/subscription/my").hasAnyRole("ADMIN", "USER")
+
+                .antMatchers(HttpMethod.POST, "/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
+
+                .antMatchers(HttpMethod.POST, "/visit/**").hasRole("ADMIN")
+
+
+
+
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));

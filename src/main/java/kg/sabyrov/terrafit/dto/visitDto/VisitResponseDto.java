@@ -4,10 +4,14 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VisitDto {
-    Long code;
+public class VisitResponseDto {
+    String email;
+    String name;
+    String surname;
+    Long subscriptionId;
+    String trainingGroup;
 }

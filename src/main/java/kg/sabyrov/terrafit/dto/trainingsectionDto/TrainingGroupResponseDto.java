@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TrainingGroupResponseDto {
+    Long id;
     String name;
     String coachName;
     BigDecimal subscriptionPrice;

@@ -47,6 +47,8 @@ public class UserController {
         }
     }
 
+
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
         try {
@@ -75,11 +77,11 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/check")
-    public String check(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-//        return principal.getName();
-    }
+//    @GetMapping("/check")
+//    public String check(){
+//        return SecurityContextHolder.getContext().getAuthentication().getName();
+////        return principal.getName();
+//    }
 
     @PostMapping("/recovery")
     public ResponseEntity<?> recovery(@RequestBody RecoveryModel recoveryModel){

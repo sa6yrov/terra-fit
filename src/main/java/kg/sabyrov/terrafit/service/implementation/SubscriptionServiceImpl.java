@@ -6,19 +6,19 @@ import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
+import kg.sabyrov.terrafit.exceptions.WrongBalanceException;
 import kg.sabyrov.terrafit.repository.SubscriptionRepository;
-import kg.sabyrov.terrafit.service.PromoCodeService;
-import kg.sabyrov.terrafit.service.SubscriptionService;
-import kg.sabyrov.terrafit.service.TrainingGroupService;
-import kg.sabyrov.terrafit.service.UserService;
+import kg.sabyrov.terrafit.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,16 +34,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private PromoCodeService promoCodeService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public Subscription save(Subscription subscription) {
         return subscriptionRepository.save(subscription);
     }
 
     @Override
-    public Subscription getById(Long id) throws SubscriptionNotFoundException {
+    public Subscription getById(Long id) {
         Optional<Subscription> subscriptionOptional = subscriptionRepository.findById(id);
-        if(subscriptionOptional.orElse(null) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
-        return subscriptionOptional.get();
+        return subscriptionOptional.orElse(null);
     }
 
     @Override
@@ -56,61 +58,67 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<SubscriptionResponseDto> getAllModels() {
         List<Subscription> subscriptions = getAll();
-        List<SubscriptionResponseDto> subscriptionResponses = new ArrayList<>();
 
-        for (Subscription s : subscriptions) {
-            subscriptionResponses.add(SubscriptionResponseDto.builder()
-                    .trainingName(s.getTrainingGroup().getName())
-                    .userEmail(s.getUser().getEmail())
-                    .subscriptionId(s.getId())
-                    .sessionQuantity(s.getSessionQuantity())
-                    .price(s.getTrainingGroup().getSubscriptionPrice())
-                    .discountPercentages(s.getDiscountPercentages())
-                    .totalAmount(s.getTotalAmount())
-                    .build());
-        }
+        return getSubResponseList(subscriptions);
 
-        return subscriptionResponses;
     }
 
     @Override
-    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws UserNotFoundException, SubscriptionNotFoundException {
-        TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingSectionId());
+    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws WrongBalanceException {
+        TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingGroupId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);
+
+        if(!paymentService.isPaid(user.getId(), getTotalPrice(trainingGroup, subscriptionRequestDto))) throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
         Subscription subscription = save(Subscription.builder()
                 .trainingGroup(trainingGroup)
                 .user(user)
                 .sessionQuantity(subscriptionRequestDto.getSessionQuantity())
                 .discountPercentages(getDiscountPercentages(subscriptionRequestDto.getPromoCode()))
                 .totalAmount(getTotalPrice(trainingGroup, subscriptionRequestDto))
+                .status(Status.ACTIVE)
                 .build());
+
         return getSubscriptionResponse(subscription);
 
     }
 
+
     @Override
-    public SubscriptionResponseDto getModelById(Long id) throws SubscriptionNotFoundException {
-        Subscription subscription = getById(id);
-        return SubscriptionResponseDto.builder()
-                .subscriptionId(subscription.getId())
-                .userEmail(subscription.getUser().getEmail())
-                .trainingName(subscription.getTrainingGroup().getName())
-                .sessionQuantity(subscription.getSessionQuantity())
-                .price(subscription.getTrainingGroup().getSubscriptionPrice())
-                .discountPercentages(subscription.getDiscountPercentages())
-                .totalAmount(subscription.getTotalAmount())
-                .status(subscription.getStatus())
-                .build();
+    public List<SubscriptionResponseDto> getAllByUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User user = userService.findByEmail(email);
+        List<Subscription> subscriptions = subscriptionRepository.findAllByUser(user);
+
+        return getSubResponseList(subscriptions);
     }
+
+    @Override
+    public SubscriptionResponseDto findModelById(Long id) throws SubscriptionNotFoundException {
+        if(getById(id) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
+        return getSubscriptionResponse(getById(id));
+    }
+
+
+    private List<SubscriptionResponseDto> getSubResponseList(List<Subscription> subscriptions){
+        List<SubscriptionResponseDto> subscriptionResponseDtos = new ArrayList<>();
+        for (Subscription s : subscriptions) {
+            subscriptionResponseDtos.add(getSubscriptionResponse(s));
+        }
+        return subscriptionResponseDtos;
+    }
+
 
     private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto){
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
+
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
-        BigDecimal discountPrice = (trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
-                    .multiply(new BigDecimal(100 / getDiscountPercentages(subscriptionRequestDto.getPromoCode())));
-        return trainingGroup.getSubscriptionPrice().subtract(discountPrice);
+
+        BigDecimal discountPrice = ((trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
+                    .multiply(new BigDecimal(getDiscountPercentages(subscriptionRequestDto.getPromoCode()) / 100.0)));
+        return trainingGroup.getSubscriptionPrice().subtract(discountPrice).setScale(1, RoundingMode.UP);
     }
 
     private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
@@ -136,6 +144,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .price(subscription.getTrainingGroup().getSubscriptionPrice())
                 .discountPercentages(subscription.getDiscountPercentages())
                 .totalAmount(subscription.getTotalAmount())
+                .status(subscription.getStatus())
                 .build();
     }
 

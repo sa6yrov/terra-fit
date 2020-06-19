@@ -7,10 +7,7 @@ import kg.sabyrov.terrafit.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/wallet")
@@ -21,16 +18,17 @@ public class WalletController {
     @GetMapping("/my")
     public ResponseEntity<?> getWallet(){
         try {
-            return new ResponseEntity<>(walletService.getByUser(), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(walletService.getWalletModelByUser(), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("/my/replenish")
-    public ResponseEntity<?> replenish(WalletReplenishDto walletReplenishDto){
+    public ResponseEntity<?> replenish(@RequestBody WalletReplenishDto walletReplenishDto){
         try {
             return new ResponseEntity<>(walletService.replenish(walletReplenishDto), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

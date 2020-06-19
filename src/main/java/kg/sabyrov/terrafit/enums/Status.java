@@ -6,5 +6,6 @@ public enum Status {
     PROCESSING,
     ACTIVE,
     INACTIVE,
-    FROZEN
+    FROZEN,
+    PAID
 }

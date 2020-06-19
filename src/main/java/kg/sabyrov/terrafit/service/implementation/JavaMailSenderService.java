@@ -4,7 +4,6 @@ package kg.sabyrov.terrafit.service.implementation;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.UserConfirmationCode;
 import kg.sabyrov.terrafit.exceptions.MailSendException;
-import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.service.UserConfirmationCodeService;
 import kg.sabyrov.terrafit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
