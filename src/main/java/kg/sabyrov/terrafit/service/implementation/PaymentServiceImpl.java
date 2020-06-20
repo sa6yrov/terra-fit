@@ -45,8 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean isPaid(Long id, BigDecimal totalAmount) {
-        Wallet from = walletService.getById(id);
+    public boolean isPaid(User user, BigDecimal totalAmount) throws UserNotFoundException {
+        Wallet from = walletService.getByUser(user);
         Wallet to = walletService.getById(1L);
         if(from.getBalance().compareTo(BigDecimal.ZERO) <= 0) return false;
         Payment payment = Payment.builder()

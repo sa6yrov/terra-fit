@@ -56,17 +56,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/role").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/employee/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/employee").permitAll()
+                .antMatchers(HttpMethod.GET, "/employee/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/employee").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/training-group").permitAll()
                 .antMatchers(HttpMethod.POST, "/training-group").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/subscription/*").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/subscription/my").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "/subscription/my").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/subscription/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/subscription/visit").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.POST, "/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
 

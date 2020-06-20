@@ -1,9 +1,6 @@
 package kg.sabyrov.terrafit.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -13,7 +10,8 @@ import java.util.Date;
 @MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseEntity {
 

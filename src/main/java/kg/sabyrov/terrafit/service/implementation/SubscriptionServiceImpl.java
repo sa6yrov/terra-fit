@@ -64,13 +64,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws WrongBalanceException {
+    public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws WrongBalanceException, UserNotFoundException {
         TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingGroupId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);
 
-        if(!paymentService.isPaid(user.getId(), getTotalPrice(trainingGroup, subscriptionRequestDto))) throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
+        if(!paymentService.isPaid(user, getTotalPrice(trainingGroup, subscriptionRequestDto))) throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
         Subscription subscription = save(Subscription.builder()
                 .trainingGroup(trainingGroup)
                 .user(user)
@@ -115,10 +115,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
 
         if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
-
-        BigDecimal discountPrice = ((trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity())))
-                    .multiply(new BigDecimal(getDiscountPercentages(subscriptionRequestDto.getPromoCode()) / 100.0)));
-        return trainingGroup.getSubscriptionPrice().subtract(discountPrice).setScale(1, RoundingMode.UP);
+        BigDecimal price = trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity()));
+        BigDecimal discountPrice = price.multiply(new BigDecimal(getDiscountPercentages(subscriptionRequestDto.getPromoCode()) / 100.0));
+        return price.subtract(discountPrice).setScale(1, RoundingMode.UP);
     }
 
     private BigDecimal getMultiplierForPrice(Integer sessionQuantity){

@@ -1,13 +1,13 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
-import kg.sabyrov.terrafit.dto.userDto.UserSubscriptionResponseDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.Visit;
+import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.repository.VisitRepository;
 import kg.sabyrov.terrafit.service.SubscriptionService;
@@ -44,8 +44,8 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public UserSubscriptionResponseDto create(VisitDto visitDto) throws SubscriptionNotFoundException {
-        if(!checkCode(visitDto.getCode())) throw new SubscriptionNotFoundException("Subscription with this code not found");
+    public VisitResponseDto create(VisitDto visitDto) throws SubscriptionNotFoundException {
+        if(!checkCode(visitDto.getCode())) throw new SubscriptionNotFoundException("Subscription with this code is inactive or not found");
 
         Subscription subscription = visitProcess(visitDto.getCode());
 
@@ -58,23 +58,23 @@ public class VisitServiceImpl implements VisitService {
 
 
 
-        SubscriptionResponseDto subscriptionResponseDto = SubscriptionResponseDto.builder()
-                .trainingName(subscription.getTrainingGroup().getName())
-                .price(subscription.getTrainingGroup().getSubscriptionPrice())
-                .discountPercentages(subscription.getDiscountPercentages())
-                .totalAmount(subscription.getTotalAmount())
-                .sessionQuantity(subscription.getSessionQuantity())
-                .status(subscription.getStatus())
-                .build();
+//        SubscriptionResponseDto subscriptionResponseDto = SubscriptionResponseDto.builder()
+//                .trainingName(subscription.getTrainingGroup().getName())
+//                .price(subscription.getTrainingGroup().getSubscriptionPrice())
+//                .discountPercentages(subscription.getDiscountPercentages())
+//                .totalAmount(subscription.getTotalAmount())
+//                .sessionQuantity(subscription.getSessionQuantity())
+//                .status(subscription.getStatus())
+//                .build();
 
-        return UserSubscriptionResponseDto.builder()
+        return VisitResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .surname(user.getSurname())
-                .birthDate(user.getBirthDate())
-                .gender(user.getGender())
-                .phoneNumber(user.getPhoneNumber())
-                .subscriptionResponseDto(subscriptionResponseDto)
+                .trainingGroupName(subscription.getTrainingGroup().getName())
+                .subscriptionId(subscription.getId())
+                .sessionQuantity(subscription.getSessionQuantity())
+                .visitTime(visit.getCreatedDate())
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class VisitServiceImpl implements VisitService {
                     .email(v.getUser().getEmail())
                     .name(v.getUser().getName())
                     .surname(v.getUser().getSurname())
-                    .trainingGroup(v.getSubscription().getTrainingGroup().getName())
+                    .trainingGroupName(v.getSubscription().getTrainingGroup().getName())
                     .subscriptionId(v.getSubscription().getId())
                     .build());
         }
@@ -96,12 +96,14 @@ public class VisitServiceImpl implements VisitService {
     }
 
     private boolean checkCode(Long id) throws SubscriptionNotFoundException {
-        return subscriptionService.getById(id) == null;
+        Subscription subscription = subscriptionService.getById(id);
+        return subscription != null && !subscription.getStatus().equals(Status.INACTIVE);
     }
 
     private Subscription visitProcess(Long id) throws SubscriptionNotFoundException {
         Subscription subscription = subscriptionService.getById(id);
         subscription.setSessionQuantity(subscription.getSessionQuantity() - 1);
+        if(subscription.getSessionQuantity() == 0) subscription.setStatus(Status.INACTIVE);
         return subscription;
     }
 

@@ -3,6 +3,8 @@ package kg.sabyrov.terrafit.dto.visitDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,6 +14,8 @@ public class VisitResponseDto {
     String email;
     String name;
     String surname;
+    String trainingGroupName;
     Long subscriptionId;
-    String trainingGroup;
+    Integer sessionQuantity;
+    LocalDateTime visitTime;
 }

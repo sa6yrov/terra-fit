@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter

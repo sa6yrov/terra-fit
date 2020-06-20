@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 
 public interface PaymentService extends BaseService<Payment>{
 
-    boolean isPaid(Long id, BigDecimal totalAmount);
+    boolean isPaid(User user, BigDecimal totalAmount) throws UserNotFoundException;
 }
