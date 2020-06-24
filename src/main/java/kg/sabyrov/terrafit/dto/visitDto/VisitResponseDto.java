@@ -18,4 +18,5 @@ public class VisitResponseDto {
     Long subscriptionId;
     Integer sessionQuantity;
     LocalDateTime visitTime;
+    String manager;
 }

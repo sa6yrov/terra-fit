@@ -1,7 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.*;
+import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
 import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
@@ -99,6 +99,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDto findModelById(Long id) throws SubscriptionNotFoundException {
         if(getById(id) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
         return getSubscriptionResponse(getById(id));
+    }
+
+    @Override
+    public TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(VisitRequestTimeDto visitRequestTimeDto) {
+        return TotalAmountBetweenDateResponseDto.builder()
+                .totalAmount(subscriptionRepository.getSumByTwoDate(visitRequestTimeDto.getFrom(), visitRequestTimeDto.getTo()))
+                .build();
+    }
+
+    @Override
+    public TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(TotalAmountByGroupDto totalAmountByGroupDto) {
+        TrainingGroup trainingGroup = trainingGroupService.getById(totalAmountByGroupDto.getTrainingGroupId());
+        return TotalAmountByTrainingGroupResponseDto.builder()
+                .trainingGroupName(trainingGroup.getName())
+                .amount(subscriptionRepository.getSumByTwoDateAndGroup(totalAmountByGroupDto.getFrom(), totalAmountByGroupDto.getTo(), trainingGroup))
+                .build();
     }
 
 

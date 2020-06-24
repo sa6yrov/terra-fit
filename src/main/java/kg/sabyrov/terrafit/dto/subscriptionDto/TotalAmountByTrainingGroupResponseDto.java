@@ -1,4 +1,4 @@
-package kg.sabyrov.terrafit.dto.visitDto;
+package kg.sabyrov.terrafit.dto.subscriptionDto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TotalAmountBetweenDateResponseDto {
-    BigDecimal totalAmount;
+public class TotalAmountByTrainingGroupResponseDto {
+    String trainingGroupName;
+    BigDecimal amount;
 }

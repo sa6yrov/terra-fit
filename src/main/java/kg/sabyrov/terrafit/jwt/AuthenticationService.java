@@ -29,9 +29,9 @@ public class AuthenticationService {
                 userService.deActivateUser(email);
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            authLogService.create(email, Status.OK);
+//            authLogService.create(email, Status.OK);
         }catch (DisabledException e){
-            authLogService.create(email, Status.FAILED);
+//            authLogService.create(email, Status.FAILED);
             throw new JwtAuthenticationException("USER_DISABLED");
         }catch (BadCredentialsException e){
             throw new JwtAuthenticationException("INVALID_CREDENTIALS");

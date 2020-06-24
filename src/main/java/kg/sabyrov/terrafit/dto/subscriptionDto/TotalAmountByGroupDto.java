@@ -1,10 +1,9 @@
-package kg.sabyrov.terrafit.dto.visitDto;
+package kg.sabyrov.terrafit.dto.subscriptionDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,10 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VisitRequestTimeDto {
+public class TotalAmountByGroupDto {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     LocalDateTime from;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     LocalDateTime to;
+
+    Long trainingGroupId;
 }

@@ -33,7 +33,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         if(user == null){
             return null;
         }
-        if(user.getIsActive() != 1) throw new DisabledException("User is inactive");
+//        if(user.getIsActive() != 1) throw new DisabledException("User is inactive");
         return JwtUser.builder()
                 .id(user.getId())
                 .email(user.getEmail())

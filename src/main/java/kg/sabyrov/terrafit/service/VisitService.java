@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface VisitService extends BaseService<Visit> {
     VisitResponseDto create(VisitDto visitDto) throws SubscriptionNotFoundException;
+
     List<VisitResponseDto> getAllVisitsBetweenTime(VisitRequestTimeDto visitRequestTimeDto);
 }

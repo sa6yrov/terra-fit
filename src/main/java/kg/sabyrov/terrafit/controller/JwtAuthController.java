@@ -49,7 +49,7 @@ public class JwtAuthController {
             return ResponseEntity.ok(new JwtTokenResponse(token));
         } catch (Exception e) {
             authLogService.create(jwtTokenRequest.getEmail(), Status.FAILED);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
 
     }

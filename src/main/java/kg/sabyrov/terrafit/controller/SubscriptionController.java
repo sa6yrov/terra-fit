@@ -1,7 +1,9 @@
 package kg.sabyrov.terrafit.controller;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.TotalAmountByGroupDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitDto;
+import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.service.SubscriptionService;
 import kg.sabyrov.terrafit.service.VisitService;
@@ -64,4 +66,21 @@ public class SubscriptionController {
         }
     }
 
+    @PostMapping("/total-amount")
+    private ResponseEntity<?> getTotalAmount(@RequestBody VisitRequestTimeDto visitRequestTimeDto){
+        try {
+            return new ResponseEntity<>(subscriptionService.getTotalAmountByTwoDate(visitRequestTimeDto), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/training-group/total-amount")
+    private ResponseEntity<?> getTotalAmountByGroup(@RequestBody TotalAmountByGroupDto totalAmountByGroupDto){
+        try {
+            return new ResponseEntity<>(subscriptionService.getSumByTwoDateAndGroup(totalAmountByGroupDto), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

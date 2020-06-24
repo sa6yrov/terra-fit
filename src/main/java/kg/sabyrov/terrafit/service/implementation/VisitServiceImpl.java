@@ -11,8 +11,11 @@ import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.repository.VisitRepository;
 import kg.sabyrov.terrafit.service.SubscriptionService;
+import kg.sabyrov.terrafit.service.UserService;
 import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,9 +26,12 @@ import java.util.Optional;
 public class VisitServiceImpl implements VisitService {
     @Autowired
     private VisitRepository visitRepository;
+
     @Autowired
     private SubscriptionService subscriptionService;
 
+    @Autowired
+    private UserService userService;
 
     @Override
     public Visit save(Visit visit) {
@@ -45,6 +51,9 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public VisitResponseDto create(VisitDto visitDto) throws SubscriptionNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails)principal).getUsername();
+        User manager = userService.findByEmail(email);
         if(!checkCode(visitDto.getCode())) throw new SubscriptionNotFoundException("Subscription with this code is inactive or not found");
 
         Subscription subscription = visitProcess(visitDto.getCode());
@@ -53,6 +62,7 @@ public class VisitServiceImpl implements VisitService {
         Visit visit = Visit.builder()
                 .subscription(subscriptionService.save(subscription))
                 .user(user)
+                .manager(manager)
                 .build();
         save(visit);
 
@@ -75,6 +85,7 @@ public class VisitServiceImpl implements VisitService {
                 .subscriptionId(subscription.getId())
                 .sessionQuantity(subscription.getSessionQuantity())
                 .visitTime(visit.getCreatedDate())
+                .manager(manager.getEmail())
                 .build();
     }
 
@@ -90,6 +101,8 @@ public class VisitServiceImpl implements VisitService {
                     .surname(v.getUser().getSurname())
                     .trainingGroupName(v.getSubscription().getTrainingGroup().getName())
                     .subscriptionId(v.getSubscription().getId())
+                    .visitTime(v.getCreatedDate())
+                    .manager(v.getManager().getEmail())
                     .build());
         }
         return visitResponseDtos;

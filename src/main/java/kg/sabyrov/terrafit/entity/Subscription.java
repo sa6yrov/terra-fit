@@ -32,7 +32,7 @@ public class Subscription extends BaseEntity{
     @Column(name = "discount_percentages")
     Integer discountPercentages;
 
-    @Column(name = "totalAmount")
+    @Column(name = "total_amount")
     BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)

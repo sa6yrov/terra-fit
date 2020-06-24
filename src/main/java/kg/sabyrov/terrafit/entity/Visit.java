@@ -17,10 +17,6 @@ import java.util.Date;
 @Table(name = "visits")
 public class Visit extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long id;
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
@@ -29,7 +25,8 @@ public class Visit extends BaseEntity{
     @JoinColumn(name = "subscription_id", referencedColumnName = "id")
     Subscription subscription;
 
-//    @CreatedDate
-//    @Column(name = "visit_date")
-//    Date visitDate;
+    @ManyToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    User manager;
+
 }
