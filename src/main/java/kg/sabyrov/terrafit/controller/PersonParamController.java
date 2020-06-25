@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.personParamDto.PersonParamRequestDto;
 import kg.sabyrov.terrafit.dto.personParamDto.PersonParamResponseDto;
 import kg.sabyrov.terrafit.service.PersonParamService;
@@ -13,10 +15,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/person-parameters")
+@Api(tags = "Person Parameters", description = "Controller for write person parameters")
 public class PersonParamController {
+
+
     @Autowired
     private PersonParamService personParamService;
 
+    @ApiOperation(value = "FOR 'USER' - get all person-parameters")
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
@@ -26,6 +32,7 @@ public class PersonParamController {
         }
     }
 
+    @ApiOperation(value = "FOR 'USER' - create person-parameters")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PersonParamRequestDto personParamRequestDto){
         try {

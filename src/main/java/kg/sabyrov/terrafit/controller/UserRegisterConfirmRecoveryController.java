@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.userDto.UserDto;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.models.ConfirmationCodeModel;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "'Register' , 'Confirm', 'Recovery' queries", description = "Controller for register, confirm, recovery")
 public class UserRegisterConfirmRecoveryController {
     @Autowired
     private UserService userService;
@@ -23,6 +26,7 @@ public class UserRegisterConfirmRecoveryController {
     @Autowired
     private UserConfirmationCodeService userConfirmationCodeService;
 
+    @ApiOperation(value = "PERMIT ALL - register")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register (@RequestBody UserDto userDto){
         try {
@@ -32,6 +36,7 @@ public class UserRegisterConfirmRecoveryController {
         }
     }
 
+    @ApiOperation(value = "FOR 'USER' - recovery")
     @RequestMapping(value = "/recovery", method = RequestMethod.POST)
     public ResponseEntity<?> recovery(@RequestBody RecoveryModel recoveryModel){
         try {
@@ -41,6 +46,7 @@ public class UserRegisterConfirmRecoveryController {
         }
     }
 
+    @ApiOperation(value = "FOR 'USER' - confirm code")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public ResponseEntity<?> confirm(@RequestBody ConfirmationCodeModel confirmationCodeModel){
         try {

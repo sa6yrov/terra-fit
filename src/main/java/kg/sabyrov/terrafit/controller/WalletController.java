@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.walletDto.WalletReplenishDto;
 import kg.sabyrov.terrafit.dto.walletDto.WalletResponseDto;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/wallet")
+@Api(tags = "'Wallet' queries", value = "WalletQueries", description = "Controller for Wallet queries")
 public class WalletController {
     @Autowired
     private WalletService walletService;
 
+    @ApiOperation(value = "FOR 'USER' - get wallet")
     @GetMapping("/my")
     public ResponseEntity<?> getWallet(){
         try {
@@ -24,6 +28,7 @@ public class WalletController {
         }
     }
 
+    @ApiOperation(value = "FOR 'USER' - replenish wallet")
     @PostMapping("/my/replenish")
     public ResponseEntity<?> replenish(@RequestBody WalletReplenishDto walletReplenishDto){
         try {

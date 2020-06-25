@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
 import kg.sabyrov.terrafit.dto.trainingsectionDto.TrainingGroupRequestDto;
 import kg.sabyrov.terrafit.service.SubscriptionService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/training-group")
+@Api(tags = "'Training-group' queries", value = "TrainingGroupQueries", description = "Controller for Training-group queries")
 public class TrainingGroupController {
     @Autowired
     private TrainingGroupService trainingGroupService;
@@ -18,6 +21,7 @@ public class TrainingGroupController {
     @Autowired
     private SubscriptionService subscriptionService;
 
+    @ApiOperation(value = "PERMIT ALL - get all training groups")
     @GetMapping
     public ResponseEntity<?> getAllModels(){
         try {
@@ -27,6 +31,7 @@ public class TrainingGroupController {
         }
     }
 
+    @ApiOperation(value = "FOR 'ADMIN' - create training group")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody TrainingGroupRequestDto trainingGroupRequestDto){
         try{
@@ -36,6 +41,7 @@ public class TrainingGroupController {
         }
     }
 
+    @ApiOperation(value = "FOR 'USER' - buy subscription")
     @PostMapping("/subscription/buy")
     public ResponseEntity<?> buy (@RequestBody SubscriptionRequestDto subscriptionRequestDto){
         try{

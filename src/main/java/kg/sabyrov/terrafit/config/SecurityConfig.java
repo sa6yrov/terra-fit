@@ -50,27 +50,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/user/find").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/user/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/user/find").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/role").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/role").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/employee").permitAll()
-                .antMatchers(HttpMethod.GET, "/employee/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/employee").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/employee/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/training-group").permitAll()
-                .antMatchers(HttpMethod.POST, "/training-group").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/training-group").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/training-group").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/subscription/my").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/subscription/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/subscription/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/subscription/my").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/subscription/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/subscription/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.POST, "/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
 
-                .antMatchers(HttpMethod.POST, "/visit/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/visit/**").hasRole("ADMIN")
 
 
 

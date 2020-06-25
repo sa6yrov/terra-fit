@@ -147,7 +147,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private Integer getDiscountPercentages(String promoCode){
         PromoCode promoCodeFromDb = promoCodeService.findByName(promoCode);
-        return promoCodeFromDb.getDiscountPercentages();
+        return promoCodeFromDb == null ? 0 : promoCodeFromDb.getDiscountPercentages();
     }
 
     private SubscriptionResponseDto getSubscriptionResponse(Subscription subscription){

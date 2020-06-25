@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
 import kg.sabyrov.terrafit.dto.subscriptionDto.TotalAmountByGroupDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitDto;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/subscription")
+@Api(tags = "'Subscription' queries", value = "SubscriptionQueries", description = "Controller for Subscription queries")
 public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;
@@ -21,6 +24,7 @@ public class SubscriptionController {
     @Autowired
     private VisitService visitService;
 
+    @ApiOperation(value = "FOR 'ADMIN' - get all subscription models")
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
@@ -39,6 +43,7 @@ public class SubscriptionController {
 //        }
 //    }
 
+    @ApiOperation(value = "FOR 'ADMIN' - get subscription by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> getModelById(@PathVariable Long id){
         try {
@@ -48,6 +53,7 @@ public class SubscriptionController {
         }
     }
 
+    @ApiOperation("FOR 'ADMIN' - create user's visit by subscription id")
     @PostMapping("/visit")
     public ResponseEntity<?> userVisit(@RequestBody VisitDto visitDto){
         try {
@@ -57,6 +63,7 @@ public class SubscriptionController {
         }
     }
 
+    @ApiOperation("FOR 'USER' - get user's subscriptions")
     @GetMapping("/my")
     public ResponseEntity<?> getAllByUser(){
         try {
@@ -66,6 +73,7 @@ public class SubscriptionController {
         }
     }
 
+    @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount between two time")
     @PostMapping("/total-amount")
     private ResponseEntity<?> getTotalAmount(@RequestBody VisitRequestTimeDto visitRequestTimeDto){
         try {
@@ -75,6 +83,7 @@ public class SubscriptionController {
         }
     }
 
+    @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount by training group between two time")
     @PostMapping("/training-group/total-amount")
     private ResponseEntity<?> getTotalAmountByGroup(@RequestBody TotalAmountByGroupDto totalAmountByGroupDto){
         try {

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -22,6 +23,11 @@ import java.util.List;
 public class SwaggerConfig {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String DEFAULT_INCLUDE_PATTERN = "/api/.*";
+
+    @Bean
+    public EmailAnnotationPlugin emailPlugin() {
+        return new EmailAnnotationPlugin();
+    }
 
     @Bean
     public Docket productApi(){
@@ -66,4 +72,5 @@ public class SwaggerConfig {
         return Lists.newArrayList(
                 new SecurityReference("JWT", authorizationScopes));
     }
+
 }

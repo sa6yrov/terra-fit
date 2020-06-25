@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.JwtAuthenticationException;
@@ -23,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "Authentication")
 public class JwtAuthController {
 
     @Value("${jwt.http.request.header}")
@@ -37,6 +40,7 @@ public class JwtAuthController {
     @Autowired
     private AuthLogService authLogService;
 
+    @ApiOperation(value = "Get jwt token")
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
     public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) throws UserNotFoundException {
         try {

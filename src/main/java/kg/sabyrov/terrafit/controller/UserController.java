@@ -1,5 +1,7 @@
 package kg.sabyrov.terrafit.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.userDto.UserDto;
 import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
 import kg.sabyrov.terrafit.entity.UserConfirmationCode;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
+@Api(tags = "'User' queries", value = "UserQueries", description = "Controller for User queries")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -29,6 +32,7 @@ public class UserController {
 //    @Autowired
 //    private UserConfirmationCodeService userConfirmationCodeService;
 
+    @ApiOperation(value = "FOR 'ADMIN' - get all users")
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
@@ -49,6 +53,7 @@ public class UserController {
 
 
 
+    @ApiOperation(value = "FOR 'ADMIN' - find user by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
         try {
@@ -58,6 +63,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "FOR 'ADMIN' - find user by 'name' and 'surname'")
     @PostMapping("/find")
     public ResponseEntity<?> search(@RequestBody UserFindDto userFindDto){
         try {
