@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/visit")
+@RequestMapping("/api/visit")
 public class VisitController {
     @Autowired
     private VisitService visitService;

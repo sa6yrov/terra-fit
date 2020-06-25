@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/subscription")
+@RequestMapping("/api/subscription")
 public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;

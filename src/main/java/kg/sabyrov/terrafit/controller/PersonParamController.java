@@ -12,7 +12,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/person-parameters")
+@RequestMapping("/api/person-parameters")
 public class PersonParamController {
     @Autowired
     private PersonParamService personParamService;

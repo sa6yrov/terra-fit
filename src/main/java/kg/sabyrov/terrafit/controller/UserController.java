@@ -18,16 +18,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JavaMailSenderService javaMailSenderService;
-
-    @Autowired
-    private UserConfirmationCodeService userConfirmationCodeService;
+//    @Autowired
+//    private JavaMailSenderService javaMailSenderService;
+//
+//    @Autowired
+//    private UserConfirmationCodeService userConfirmationCodeService;
 
     @GetMapping
     public ResponseEntity<?> getAll(){
@@ -38,14 +38,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register (@RequestBody UserDto userDto){
-        try {
-            return new ResponseEntity<>(userService.create(userDto), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register (@RequestBody UserDto userDto){
+//        try {
+//            return new ResponseEntity<>(userService.create(userDto), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
 
@@ -83,22 +83,22 @@ public class UserController {
 ////        return principal.getName();
 //    }
 
-    @PostMapping("/recovery")
-    public ResponseEntity<?> recovery(@RequestBody RecoveryModel recoveryModel){
-        try {
-            return new ResponseEntity<>(javaMailSenderService.sendMessage(recoveryModel.getEmail()), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirm(@RequestBody ConfirmationCodeModel confirmationCodeModel){
-        try {
-            return new ResponseEntity<>(userConfirmationCodeService.confirm(confirmationCodeModel), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/recovery")
+//    public ResponseEntity<?> recovery(@RequestBody RecoveryModel recoveryModel){
+//        try {
+//            return new ResponseEntity<>(javaMailSenderService.sendMessage(recoveryModel.getEmail()), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @PostMapping("/confirm")
+//    public ResponseEntity<?> confirm(@RequestBody ConfirmationCodeModel confirmationCodeModel){
+//        try {
+//            return new ResponseEntity<>(userConfirmationCodeService.confirm(confirmationCodeModel), HttpStatus.OK);
+//        } catch (UserNotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 }

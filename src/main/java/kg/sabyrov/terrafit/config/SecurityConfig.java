@@ -93,9 +93,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.POST, loginPath)
-                .antMatchers(HttpMethod.POST, "/user/register")
-                .antMatchers(HttpMethod.POST, "/user/recovery")
-                .antMatchers(HttpMethod.POST, "/user/confirm")
+                .antMatchers(HttpMethod.POST, "/register")
+                .antMatchers(HttpMethod.POST, "/recovery")
+                .antMatchers(HttpMethod.POST, "/confirm")
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
