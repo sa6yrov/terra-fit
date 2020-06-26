@@ -3,18 +3,14 @@ package kg.sabyrov.terrafit.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.personParamDto.PersonParamRequestDto;
-import kg.sabyrov.terrafit.dto.personParamDto.PersonParamResponseDto;
 import kg.sabyrov.terrafit.service.PersonParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/person-parameters")
+@RequestMapping("/api/user/person-parameters")
 @Api(tags = "Person Parameters", description = "Controller for write person parameters")
 public class PersonParamController {
 

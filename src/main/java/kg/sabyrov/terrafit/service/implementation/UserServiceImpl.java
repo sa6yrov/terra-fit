@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
+import kg.sabyrov.terrafit.dto.userDto.UserResponseDto;
 import kg.sabyrov.terrafit.entity.Role;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.dto.userDto.UserDto;
@@ -22,6 +23,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -68,10 +70,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
     @Override
-    public List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException {
-        List<User> users = userRepository.findBySurnameAndName(userFindDto.getSurname(), userFindDto.getName());
-        if(users == null) throw new UserNotFoundException("User with surname: '" + userFindDto.getSurname() + "' and name: '" + userFindDto.getName() + "' not found");
+    public List<UserResponseDto> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException {
+        List<UserResponseDto> users = userRepository.findBySurnameAndName(
+                userFindDto.getSurname(),
+                userFindDto.getName()).stream().map(this::mapUserToModel).collect(Collectors.toList());
+
+        if(users.isEmpty()) throw new UserNotFoundException("Users with surname: '" + userFindDto.getSurname() + "' and name: '" + userFindDto.getName() + "' not found");
         return users;
+    }
+
+    @Override
+    public UserResponseDto getModelByEmail(String email) {
+        return mapUserToModel(findByEmail(email));
     }
 
     @Override
@@ -104,7 +114,7 @@ public class UserServiceImpl implements UserService {
         List<Role> roleList = new ArrayList<>();
         roleList.add(roleUser);
 
-        User user = User.builder()
+        return save(User.builder()
                 .email(userDto.getEmail())
                 .name(userDto.getName())
                 .surname(userDto.getSurname())
@@ -114,8 +124,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(0)
                 .phoneNumber(userDto.getPhoneNumber())
                 .roles(roleList)
-                .build();
-        return save(user);
+                .build());
     }
 
     private void createWalletForUser(User user){
@@ -133,4 +142,15 @@ public class UserServiceImpl implements UserService {
         return findByEmail(email) == null;
     }
 
+    private UserResponseDto mapUserToModel(User user){
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .phoneNumber(user.getPhoneNumber())
+                .birthDate(user.getBirthDate())
+                .gender(user.getGender())
+                .build();
+    }
 }

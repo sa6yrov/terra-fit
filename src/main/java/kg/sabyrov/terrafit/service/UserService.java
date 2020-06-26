@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.service;
 
 import kg.sabyrov.terrafit.dto.userDto.UserFindDto;
+import kg.sabyrov.terrafit.dto.userDto.UserResponseDto;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.dto.userDto.UserDto;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
@@ -16,7 +17,9 @@ public interface UserService extends BaseService<User>{
 
     User findByEmail(String email);
 
-    List<User> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException;
+    List<UserResponseDto> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException;
+
+    UserResponseDto getModelByEmail(String email);
 
     User deActivateUser(String email);
 

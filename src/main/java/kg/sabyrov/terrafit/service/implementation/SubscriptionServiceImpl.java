@@ -2,7 +2,7 @@ package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.*;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
+import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
@@ -103,9 +103,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(VisitRequestTimeDto visitRequestTimeDto) {
+    public TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto) {
         return TotalAmountBetweenDateResponseDto.builder()
-                .totalAmount(subscriptionRepository.getSumByTwoDate(visitRequestTimeDto.getFrom(), visitRequestTimeDto.getTo()))
+                .totalAmount(subscriptionRepository.getSumByTwoDate(requestTwoLocalDateTimeDto.getFrom(), requestTwoLocalDateTimeDto.getTo()))
                 .build();
     }
 

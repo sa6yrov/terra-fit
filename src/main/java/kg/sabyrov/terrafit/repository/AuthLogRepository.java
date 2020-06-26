@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -23,4 +24,7 @@ public interface AuthLogRepository extends JpaRepository<AuthLog, Long> {
 
     List<AuthLog> findAllByUserAndStatus(User user, Status status);
 
+    List<AuthLog> findAllByCreatedDateBetweenAndUser(LocalDateTime localDateTime, LocalDateTime localDateTime2, User user);
+
+    List<AuthLog> findAllByCreatedDateBetween(LocalDateTime localDateTime, LocalDateTime localDateTime2);
 }

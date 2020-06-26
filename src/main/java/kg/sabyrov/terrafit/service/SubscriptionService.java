@@ -2,7 +2,7 @@ package kg.sabyrov.terrafit.service;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.*;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
+import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
@@ -20,7 +20,7 @@ public interface SubscriptionService extends BaseService<Subscription> {
 
     SubscriptionResponseDto findModelById(Long id) throws SubscriptionNotFoundException;
 
-    TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(VisitRequestTimeDto visitRequestTimeDto);
+    TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto);
 
     TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto);
 }

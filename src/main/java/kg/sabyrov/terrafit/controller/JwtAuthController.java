@@ -2,10 +2,7 @@ package kg.sabyrov.terrafit.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.enums.Status;
-import kg.sabyrov.terrafit.exceptions.JwtAuthenticationException;
-import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.jwt.AuthenticationService;
 import kg.sabyrov.terrafit.models.JwtTokenRequest;
 import kg.sabyrov.terrafit.models.JwtTokenResponse;
@@ -15,11 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +34,7 @@ public class JwtAuthController {
 
     @ApiOperation(value = "Get jwt token")
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
-    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) throws UserNotFoundException {
+    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest){
         try {
             authenticationService.authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
 

@@ -1,8 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
+import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
@@ -77,10 +76,10 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public List<VisitResponseDto> getAllVisitsBetweenTime(VisitRequestTimeDto visitRequestTimeDto) {
+    public List<VisitResponseDto> getAllVisitsBetweenTime(RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto) {
         List<Visit> visits = visitRepository.findAllByCreatedDateBetween(
-                visitRequestTimeDto.getFrom(),
-                visitRequestTimeDto.getTo()
+                requestTwoLocalDateTimeDto.getFrom(),
+                requestTwoLocalDateTimeDto.getTo()
         );
         List<VisitResponseDto> visitResponseDtos = new ArrayList<>();
 
@@ -103,12 +102,12 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public List<VisitResponseDto> findAllByTrainingGroupAndBetweenTime(Long id, VisitRequestTimeDto visitRequestTimeDto) {
+    public List<VisitResponseDto> findAllByTrainingGroupAndBetweenTime(Long id, RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto) {
         TrainingGroup trainingGroup = trainingGroupService.getById(id);
         return visitRepository.findAllBySubscription_TrainingGroupAndCreatedDateBetween(
                 trainingGroup,
-                visitRequestTimeDto.getFrom(),
-                visitRequestTimeDto.getTo()
+                requestTwoLocalDateTimeDto.getFrom(),
+                requestTwoLocalDateTimeDto.getTo()
         ).stream().map(visit ->  getModel(visit)).collect(Collectors.toList());
     }
 

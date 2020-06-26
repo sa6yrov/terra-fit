@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
+import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.service.SubscriptionService;
 import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +64,9 @@ public class SubscriptionController {
 
     @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount between two time")
     @PostMapping("/total-amount")
-    private ResponseEntity<?> getTotalAmount(@RequestBody VisitRequestTimeDto visitRequestTimeDto){
+    private ResponseEntity<?> getTotalAmount(@RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
         try {
-            return new ResponseEntity<>(subscriptionService.getTotalAmountByTwoDate(visitRequestTimeDto), HttpStatus.OK);
+            return new ResponseEntity<>(subscriptionService.getTotalAmountByTwoDate(requestTwoLocalDateTimeDto), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

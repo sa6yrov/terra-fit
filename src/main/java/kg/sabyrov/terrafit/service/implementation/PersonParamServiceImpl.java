@@ -51,18 +51,7 @@ public class PersonParamServiceImpl implements PersonParamService {
         List<PersonParam> personParams = personParamRepository.findAllByUser(user);
 
         for (PersonParam p : personParams) {
-            personParamResponseDtos.add(PersonParamResponseDto.builder()
-                    .height(p.getHeight())
-                    .weight(p.getWeight())
-                    .waistGirth(p.getWaistGirth())
-                    .bicepGirth(p.getBicepGirth())
-                    .chestGirth(p.getChestGirth())
-                    .hipGirth(p.getHipGirth())
-                    .neckGirth(p.getNeckGirth())
-                    .noteGirth(p.getNoteGirth())
-                    .shoulderWidth(p.getShoulderWidth())
-                    .createdDate(p.getCreatedDate())
-                    .build());
+            personParamResponseDtos.add(getPersonParamResponseObject(p));
         }
         return personParamResponseDtos;
     }
@@ -81,7 +70,6 @@ public class PersonParamServiceImpl implements PersonParamService {
                 .bicepGirth(personParamRequestDto.getBicepGirth())
                 .chestGirth(personParamRequestDto.getChestGirth())
                 .neckGirth(personParamRequestDto.getNeckGirth())
-                .noteGirth(personParamRequestDto.getNoteGirth())
                 .waistGirth(personParamRequestDto.getWaistGirth())
                 .build());
 
@@ -93,7 +81,6 @@ public class PersonParamServiceImpl implements PersonParamService {
                 .height(personParam.getHeight())
                 .weight(personParam.getWeight())
                 .shoulderWidth(personParam.getShoulderWidth())
-                .noteGirth(personParam.getNoteGirth())
                 .neckGirth(personParam.getNeckGirth())
                 .hipGirth(personParam.getHipGirth())
                 .chestGirth(personParam.getChestGirth())

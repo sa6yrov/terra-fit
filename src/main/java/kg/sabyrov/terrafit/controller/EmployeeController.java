@@ -3,7 +3,6 @@ package kg.sabyrov.terrafit.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.employeeDto.EmployeeRequestDto;
-import kg.sabyrov.terrafit.dto.employeeDto.EmployeeResponseDto;
 import kg.sabyrov.terrafit.entity.Employee;
 import kg.sabyrov.terrafit.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/employee")
