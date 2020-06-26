@@ -2,11 +2,9 @@ package kg.sabyrov.terrafit.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionRequestDto;
-import kg.sabyrov.terrafit.dto.subscriptionDto.TotalAmountByGroupDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitDto;
+import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
-import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.service.SubscriptionService;
 import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +32,6 @@ public class SubscriptionController {
         }
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> create(@RequestBody SubscriptionRequestDto subscriptionRequestDto){
-//        try {
-//            return new ResponseEntity<>(subscriptionService.create(subscriptionRequestDto), HttpStatus.OK);
-//        }catch (Exception e){
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
     @ApiOperation(value = "FOR 'ADMIN' - get subscription by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> getModelById(@PathVariable Long id){
@@ -55,9 +44,9 @@ public class SubscriptionController {
 
     @ApiOperation("FOR 'ADMIN' - create user's visit by subscription id")
     @PostMapping("/visit")
-    public ResponseEntity<?> userVisit(@RequestBody VisitDto visitDto){
+    public ResponseEntity<?> userVisit(@RequestBody SubscriptionIdDto subscriptionIdDto){
         try {
-            return new ResponseEntity<>(visitService.create(visitDto), HttpStatus.OK);
+            return new ResponseEntity<>(visitService.create(subscriptionIdDto), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -85,9 +74,9 @@ public class SubscriptionController {
 
     @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount by training group between two time")
     @PostMapping("/training-group/total-amount")
-    private ResponseEntity<?> getTotalAmountByGroup(@RequestBody TotalAmountByGroupDto totalAmountByGroupDto){
+    private ResponseEntity<?> getTotalAmountByGroup(@RequestBody VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto){
         try {
-            return new ResponseEntity<>(subscriptionService.getSumByTwoDateAndGroup(totalAmountByGroupDto), HttpStatus.OK);
+            return new ResponseEntity<>(subscriptionService.getSumByTwoDateAndGroup(visitRequestByGroupAndTwoTimesDto), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.subscriptionDto.*;
+import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
 import kg.sabyrov.terrafit.entity.PromoCode;
 import kg.sabyrov.terrafit.entity.Subscription;
@@ -109,11 +110,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(TotalAmountByGroupDto totalAmountByGroupDto) {
-        TrainingGroup trainingGroup = trainingGroupService.getById(totalAmountByGroupDto.getTrainingGroupId());
+    public TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto) {
+        TrainingGroup trainingGroup = trainingGroupService.getById(visitRequestByGroupAndTwoTimesDto.getTrainingGroupId());
         return TotalAmountByTrainingGroupResponseDto.builder()
                 .trainingGroupName(trainingGroup.getName())
-                .amount(subscriptionRepository.getSumByTwoDateAndGroup(totalAmountByGroupDto.getFrom(), totalAmountByGroupDto.getTo(), trainingGroup))
+                .amount(subscriptionRepository.getSumByTwoDateAndGroup(visitRequestByGroupAndTwoTimesDto.getFrom(), visitRequestByGroupAndTwoTimesDto.getTo(), trainingGroup))
                 .build();
     }
 

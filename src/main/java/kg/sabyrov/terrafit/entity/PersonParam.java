@@ -43,7 +43,4 @@ public class PersonParam extends BaseEntity{
 
     @Column(name = "chest_girth")
     Float chestGirth;
-
-    @Column(name = "note_girth")
-    Float noteGirth;
 }

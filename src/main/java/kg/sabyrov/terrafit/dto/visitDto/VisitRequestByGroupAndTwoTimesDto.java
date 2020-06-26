@@ -1,4 +1,4 @@
-package kg.sabyrov.terrafit.dto.subscriptionDto;
+package kg.sabyrov.terrafit.dto.visitDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TotalAmountByGroupDto {
+public class VisitRequestByGroupAndTwoTimesDto {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     LocalDateTime from;
 

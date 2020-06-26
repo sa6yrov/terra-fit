@@ -1,4 +1,4 @@
-package kg.sabyrov.terrafit.dto.visitDto;
+package kg.sabyrov.terrafit.dto.subscriptionDto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VisitDto {
+public class SubscriptionIdDto {
     Long code;
 }

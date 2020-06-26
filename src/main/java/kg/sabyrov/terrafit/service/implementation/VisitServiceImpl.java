@@ -1,16 +1,18 @@
 package kg.sabyrov.terrafit.service.implementation;
 
-import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionResponseDto;
-import kg.sabyrov.terrafit.dto.visitDto.VisitDto;
+import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
+import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestTimeDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitResponseDto;
 import kg.sabyrov.terrafit.entity.Subscription;
+import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.Visit;
 import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.repository.VisitRepository;
 import kg.sabyrov.terrafit.service.SubscriptionService;
+import kg.sabyrov.terrafit.service.TrainingGroupService;
 import kg.sabyrov.terrafit.service.UserService;
 import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VisitServiceImpl implements VisitService {
@@ -32,6 +35,9 @@ public class VisitServiceImpl implements VisitService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TrainingGroupService trainingGroupService;
 
     @Override
     public Visit save(Visit visit) {
@@ -50,13 +56,14 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public VisitResponseDto create(VisitDto visitDto) throws SubscriptionNotFoundException {
+    public VisitResponseDto create(SubscriptionIdDto subscriptionIdDto) throws SubscriptionNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User manager = userService.findByEmail(email);
-        if(!checkCode(visitDto.getCode())) throw new SubscriptionNotFoundException("Subscription with this code is inactive or not found");
+        if(!checkCode(subscriptionIdDto.getCode()))
+            throw new SubscriptionNotFoundException("Subscription with this code is inactive or not found");
 
-        Subscription subscription = visitProcess(visitDto.getCode());
+        Subscription subscription = visitProcess(subscriptionIdDto.getCode());
 
         User user = subscription.getUser();
         Visit visit = Visit.builder()
@@ -64,60 +71,69 @@ public class VisitServiceImpl implements VisitService {
                 .user(user)
                 .manager(manager)
                 .build();
-        save(visit);
 
 
-
-//        SubscriptionResponseDto subscriptionResponseDto = SubscriptionResponseDto.builder()
-//                .trainingName(subscription.getTrainingGroup().getName())
-//                .price(subscription.getTrainingGroup().getSubscriptionPrice())
-//                .discountPercentages(subscription.getDiscountPercentages())
-//                .totalAmount(subscription.getTotalAmount())
-//                .sessionQuantity(subscription.getSessionQuantity())
-//                .status(subscription.getStatus())
-//                .build();
-
-        return VisitResponseDto.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .trainingGroupName(subscription.getTrainingGroup().getName())
-                .subscriptionId(subscription.getId())
-                .sessionQuantity(subscription.getSessionQuantity())
-                .visitTime(visit.getCreatedDate())
-                .manager(manager.getEmail())
-                .build();
+        return getModel(save(visit)); //'getModel' have Visit param, 'save(visit) return visit from DB'
     }
 
     @Override
     public List<VisitResponseDto> getAllVisitsBetweenTime(VisitRequestTimeDto visitRequestTimeDto) {
-        List<Visit> visits = visitRepository.findAllByCreatedDateBetween(visitRequestTimeDto.getFrom(), visitRequestTimeDto.getTo());
+        List<Visit> visits = visitRepository.findAllByCreatedDateBetween(
+                visitRequestTimeDto.getFrom(),
+                visitRequestTimeDto.getTo()
+        );
         List<VisitResponseDto> visitResponseDtos = new ArrayList<>();
 
         for (Visit v : visits) {
-            visitResponseDtos.add(VisitResponseDto.builder()
-                    .email(v.getUser().getEmail())
-                    .name(v.getUser().getName())
-                    .surname(v.getUser().getSurname())
-                    .trainingGroupName(v.getSubscription().getTrainingGroup().getName())
-                    .subscriptionId(v.getSubscription().getId())
-                    .visitTime(v.getCreatedDate())
-                    .manager(v.getManager().getEmail())
-                    .build());
+            visitResponseDtos.add(getModel(v));
         }
         return visitResponseDtos;
     }
 
-    private boolean checkCode(Long id) throws SubscriptionNotFoundException {
+    @Override
+    public List<VisitResponseDto> getAllModels() {
+        return getAll().stream().map(visit -> getModel(visit)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VisitResponseDto> findAllBySubscription(Long id) {
+        Subscription subscription = subscriptionService.getById(id);
+        return visitRepository.findAllBySubscription(subscription)
+                .stream().map(visit -> getModel(visit)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VisitResponseDto> findAllByTrainingGroupAndBetweenTime(Long id, VisitRequestTimeDto visitRequestTimeDto) {
+        TrainingGroup trainingGroup = trainingGroupService.getById(id);
+        return visitRepository.findAllBySubscription_TrainingGroupAndCreatedDateBetween(
+                trainingGroup,
+                visitRequestTimeDto.getFrom(),
+                visitRequestTimeDto.getTo()
+        ).stream().map(visit ->  getModel(visit)).collect(Collectors.toList());
+    }
+
+    private boolean checkCode(Long id) {
         Subscription subscription = subscriptionService.getById(id);
         return subscription != null && !subscription.getStatus().equals(Status.INACTIVE);
     }
 
-    private Subscription visitProcess(Long id) throws SubscriptionNotFoundException {
+    private Subscription visitProcess(Long id) {
         Subscription subscription = subscriptionService.getById(id);
         subscription.setSessionQuantity(subscription.getSessionQuantity() - 1);
         if(subscription.getSessionQuantity() == 0) subscription.setStatus(Status.INACTIVE);
         return subscription;
     }
 
+    private VisitResponseDto getModel(Visit visit){
+        return VisitResponseDto.builder()
+                .email(visit.getUser().getEmail())
+                .name(visit.getUser().getName())
+                .surname(visit.getUser().getSurname())
+                .trainingGroupName(visit.getSubscription().getTrainingGroup().getName())
+                .subscriptionId(visit.getSubscription().getId())
+                .sessionQuantity(visit.getSubscription().getSessionQuantity())
+                .manager(visit.getManager().getEmail())
+                .visitTime(visit.getCreatedDate())
+                .build();
+    }
 }
