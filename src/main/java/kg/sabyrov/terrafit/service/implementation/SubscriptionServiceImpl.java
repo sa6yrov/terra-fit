@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -58,9 +59,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionResponseDto> getAllModels() {
-        List<Subscription> subscriptions = getAll();
 
-        return getSubResponseList(subscriptions);
+        return getSubResponseList(getAll()); //getAll() return subscription List
 
     }
 
@@ -69,9 +69,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingGroupId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
+
         User user = userService.findByEmail(email);
 
         if(!paymentService.isPaid(user, getTotalPrice(trainingGroup, subscriptionRequestDto))) throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
+
         Subscription subscription = save(Subscription.builder()
                 .trainingGroup(trainingGroup)
                 .user(user)
@@ -91,9 +93,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);
-        List<Subscription> subscriptions = subscriptionRepository.findAllByUser(user);
 
-        return getSubResponseList(subscriptions);
+        return getSubResponseList(subscriptionRepository.findAllByUser(user));
     }
 
     @Override
@@ -120,20 +121,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     private List<SubscriptionResponseDto> getSubResponseList(List<Subscription> subscriptions){
-        List<SubscriptionResponseDto> subscriptionResponseDtos = new ArrayList<>();
-        for (Subscription s : subscriptions) {
-            subscriptionResponseDtos.add(getSubscriptionResponse(s));
-        }
-        return subscriptionResponseDtos;
+        return subscriptions.stream()
+                .map(this::getSubscriptionResponse)
+                .collect(Collectors.toList());
     }
 
 
     private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto){
-        if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(200);
+        if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1)
+            return new BigDecimal(200);
 
-        if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1) return new BigDecimal(300);
+        if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1)
+            return new BigDecimal(300);
+
         BigDecimal price = trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity()));
         BigDecimal discountPrice = price.multiply(new BigDecimal(getDiscountPercentages(subscriptionRequestDto.getPromoCode()) / 100.0));
+
         return price.subtract(discountPrice).setScale(1, RoundingMode.UP);
     }
 

@@ -13,9 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonParamServiceImpl implements PersonParamService {
@@ -42,22 +42,18 @@ public class PersonParamServiceImpl implements PersonParamService {
 
 
     @Override
-    public List<PersonParamResponseDto> findAllByUser() throws UserNotFoundException {
+    public List<PersonParamResponseDto> findAllByUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
 
-        List<PersonParamResponseDto> personParamResponseDtos = new ArrayList<>();
         User user = userService.findByEmail(email);
-        List<PersonParam> personParams = personParamRepository.findAllByUser(user);
 
-        for (PersonParam p : personParams) {
-            personParamResponseDtos.add(getPersonParamResponseObject(p));
-        }
-        return personParamResponseDtos;
+        return personParamRepository.findAllByUser(user)
+                .stream().map(this::getPersonParamResponseObject).collect(Collectors.toList());
     }
 
     @Override
-    public PersonParamResponseDto create(PersonParamRequestDto personParamRequestDto) throws UserNotFoundException {
+    public PersonParamResponseDto create(PersonParamRequestDto personParamRequestDto){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User user = userService.findByEmail(email);

@@ -55,7 +55,7 @@ public class UserConfirmationCodeServiceImpl implements UserConfirmationCodeServ
     }
 
     @Override
-    public UserConfirmationCode findConfirmationCodeByUser(User user) throws UserNotFoundException {
+    public UserConfirmationCode findConfirmationCodeByUser(User user) {
          return userConfirmationCodeRepository.findByUserAndActive(user.getId(), true);
 
     }
@@ -67,13 +67,13 @@ public class UserConfirmationCodeServiceImpl implements UserConfirmationCodeServ
 
         if(userConfirmationCode.getCode().equals(confirmationCodeModel.getCode())){
             userService.activation(confirmationCodeModel.getEmail());
-            userConfirmationCode.setActive(false);
+            userConfirmationCode.setActive(false); //setActive in UserConfirmationCode entity for forgot old user's confirmation codes
             save(userConfirmationCode);
-            setIsRecoveredActive(authLogService.findAllByUserAndStatus(confirmationCodeModel.getEmail(), Status.FAILED));
+            setIsRecoveredTrue(authLogService.findAllByUserAndStatus(confirmationCodeModel.getEmail(), Status.FAILED)); //AuthLog entity have isRecovered field for  block the user for 3 new failed attempts
         }
         return "Your account is active";
     }
-    private void setIsRecoveredActive(List<AuthLog> authLogs){
+    private void setIsRecoveredTrue(List<AuthLog> authLogs){
         for (AuthLog a : authLogs) {
             a.setIsRecovered(1);
         }

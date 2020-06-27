@@ -5,9 +5,7 @@ import kg.sabyrov.terrafit.entity.User;
 import kg.sabyrov.terrafit.entity.Wallet;
 import kg.sabyrov.terrafit.enums.Currency;
 import kg.sabyrov.terrafit.enums.Status;
-import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
-import kg.sabyrov.terrafit.exceptions.WrongBalanceException;
 import kg.sabyrov.terrafit.repository.PaymentRepository;
 import kg.sabyrov.terrafit.service.PaymentService;
 import kg.sabyrov.terrafit.service.WalletService;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 

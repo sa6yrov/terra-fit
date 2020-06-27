@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainingGroupServiceImpl implements TrainingGroupService {
@@ -29,13 +30,8 @@ public class TrainingGroupServiceImpl implements TrainingGroupService {
 
     @Override
     public TrainingGroupResponseDto create(TrainingGroupRequestDto trainingGroupRequestDto) {
-        TrainingGroup trainingGroup = saveAndGetTrainingSectionFromDb(trainingGroupRequestDto);
 
-        return TrainingGroupResponseDto.builder()
-                .name(trainingGroup.getName())
-                .coachName(trainingGroup.getEmployee().getUser().getName())
-                .status(trainingGroup.getStatus())
-                .build();
+        return mapTrainingGroupToModel(saveAndGetTrainingSectionFromDb(trainingGroupRequestDto)); //saveAndGetTrainingSectionFromDb() return Entity
 
     }
     private TrainingGroup saveAndGetTrainingSectionFromDb(TrainingGroupRequestDto trainingGroupRequestDto){
@@ -61,23 +57,23 @@ public class TrainingGroupServiceImpl implements TrainingGroupService {
 
     @Override
     public List<TrainingGroupResponseDto> getAllModel() {
-        List<TrainingGroup> trainingGroups = getAll();
-        List<TrainingGroupResponseDto> trainingGroupResponseDtos = new ArrayList<>();
-
-        for (TrainingGroup t : trainingGroups) {
-            trainingGroupResponseDtos.add(TrainingGroupResponseDto.builder()
-                    .id(t.getId())
-                    .name(t.getName())
-                    .subscriptionPrice(t.getSubscriptionPrice())
-                    .coachName(t.getEmployee().getUser().getName())
-                    .status(t.getStatus())
-                    .build());
-        }
-        return trainingGroupResponseDtos;
+        return getAll().stream()
+                .map(this::mapTrainingGroupToModel)
+                .collect(Collectors.toList());
     }
 
     private Employee getEmployeeFromDb(String email){
         return employeeService.findByUserEmail(email);
+    }
+
+    private TrainingGroupResponseDto mapTrainingGroupToModel(TrainingGroup t){
+        return TrainingGroupResponseDto.builder()
+                .id(t.getId())
+                .name(t.getName())
+                .subscriptionPrice(t.getSubscriptionPrice())
+                .coachName(t.getEmployee().getUser().getName())
+                .status(t.getStatus())
+                .build();
     }
 
 }

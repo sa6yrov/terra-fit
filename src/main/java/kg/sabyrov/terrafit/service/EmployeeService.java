@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface EmployeeService extends BaseService<Employee> {
     Employee findByUserEmail(String email);
+
     EmployeeResponseDto create(EmployeeRequestDto employeeRequestDto) throws UserNotFoundException;
+
     List<EmployeeResponseDto> findAllModels();
 }

@@ -60,13 +60,12 @@ public class UserServiceImpl implements UserService {
 
         User user = saveAndGetUserByUserModel(userDto);
         createWalletForUser(user);
-        javaMailSenderService.sendMessage(user.getEmail());
+        javaMailSenderService.sendMessage(user.getEmail()); //java mail sender for send code to user's email
         return new ResponseMessage(user.getEmail() + ", please check your email and confirm code");
 
     }
     @Override
     public User findByEmail(String email){
-        //        if(user == null) throw new UserNotFoundException("User with '" + email + "'  email not found");
         return userRepository.findByEmail(email);
     }
     @Override

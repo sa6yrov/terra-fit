@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,43 +71,39 @@ public class VisitServiceImpl implements VisitService {
                 .build();
 
 
-        return getModel(save(visit)); //'getModel' have Visit param, 'save(visit) return visit from DB'
+        return mapVisitToModel(save(visit)); //'getModel' have Visit param, 'save(visit) return visit from DB'
     }
 
     @Override
     public List<VisitResponseDto> getAllVisitsBetweenTime(RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto) {
-        List<Visit> visits = visitRepository.findAllByCreatedDateBetween(
+        return visitRepository.findAllByCreatedDateBetween(
                 requestTwoLocalDateTimeDto.getFrom(),
                 requestTwoLocalDateTimeDto.getTo()
-        );
-        List<VisitResponseDto> visitResponseDtos = new ArrayList<>();
-
-        for (Visit v : visits) {
-            visitResponseDtos.add(getModel(v));
-        }
-        return visitResponseDtos;
+        ).stream().map(this::mapVisitToModel).collect(Collectors.toList());
     }
 
     @Override
     public List<VisitResponseDto> getAllModels() {
-        return getAll().stream().map(visit -> getModel(visit)).collect(Collectors.toList());
+        return getAll().stream().map(this::mapVisitToModel).collect(Collectors.toList());
     }
 
     @Override
     public List<VisitResponseDto> findAllBySubscription(Long id) {
         Subscription subscription = subscriptionService.getById(id);
+
         return visitRepository.findAllBySubscription(subscription)
-                .stream().map(visit -> getModel(visit)).collect(Collectors.toList());
+                .stream().map(this::mapVisitToModel).collect(Collectors.toList());
     }
 
     @Override
     public List<VisitResponseDto> findAllByTrainingGroupAndBetweenTime(Long id, RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto) {
         TrainingGroup trainingGroup = trainingGroupService.getById(id);
+
         return visitRepository.findAllBySubscription_TrainingGroupAndCreatedDateBetween(
                 trainingGroup,
                 requestTwoLocalDateTimeDto.getFrom(),
                 requestTwoLocalDateTimeDto.getTo()
-        ).stream().map(visit ->  getModel(visit)).collect(Collectors.toList());
+        ).stream().map(this::mapVisitToModel).collect(Collectors.toList());
     }
 
     private boolean checkCode(Long id) {
@@ -123,7 +118,7 @@ public class VisitServiceImpl implements VisitService {
         return subscription;
     }
 
-    private VisitResponseDto getModel(Visit visit){
+    private VisitResponseDto mapVisitToModel(Visit visit){
         return VisitResponseDto.builder()
                 .email(visit.getUser().getEmail())
                 .name(visit.getUser().getName())
