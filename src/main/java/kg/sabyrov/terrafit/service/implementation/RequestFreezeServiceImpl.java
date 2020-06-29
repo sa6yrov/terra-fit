@@ -1,6 +1,7 @@
 package kg.sabyrov.terrafit.service.implementation;
 
 import kg.sabyrov.terrafit.dto.requestForFreezeDto.FreezeResponseDto;
+import kg.sabyrov.terrafit.dto.requestForFreezeDto.RequestApprovingCancellingDto;
 import kg.sabyrov.terrafit.dto.requestForFreezeDto.RequestFreezeDto;
 import kg.sabyrov.terrafit.entity.RequestFreeze;
 import kg.sabyrov.terrafit.entity.Subscription;
@@ -53,8 +54,8 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     }
 
     @Override
-    public List<FreezeResponseDto> getAllByStatus(Status status) {
-        return requestFreezeRepository.findAllByStatus(status)
+    public List<FreezeResponseDto> getAllByStatus() {
+        return requestFreezeRepository.findAllByStatus(Status.CONSIDERATION)
                 .stream().map(this::mapRequestFreezeToModel).collect(Collectors.toList());
     }
 
@@ -71,25 +72,25 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     }
 
     @Override
-    public ResponseMessage approving(List<Long> idList) throws RequestNotFoundException {
+    public ResponseMessage approving(RequestApprovingCancellingDto requestApprovingCancellingDto) throws RequestNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
         User manager = userService.findByEmail(email);
 
-        List<RequestFreeze> requestFreezes = approvedOrCancelledProcess(Status.APPROVED, idList, manager);
+        List<RequestFreeze> requestFreezes = approvedOrCancelledProcess(Status.APPROVED, requestApprovingCancellingDto.getIdList(), manager);
         freezingProcess(requestFreezes);
         return ResponseMessage.builder().message("Requests was successfully approved").build();
     }
 
     @Override
-    public ResponseMessage cancelling(List<Long> idList) {
+    public ResponseMessage cancelling(RequestApprovingCancellingDto requestApprovingCancellingDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
 
         User manager = userService.findByEmail(email);
 
 
-        return approvedOrCancelledProcess(Status.CANCELLED, idList, manager) != null ?
+        return approvedOrCancelledProcess(Status.CANCELLED, requestApprovingCancellingDto.getIdList(), manager) != null ?
                 new ResponseMessage("Requests was successfully cancelled") : new ResponseMessage("Requests for freezing ");
     }
 

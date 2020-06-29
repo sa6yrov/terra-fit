@@ -42,7 +42,7 @@ public class Subscription extends BaseEntity{
     @Column(name = "status", nullable = false)
     Status status;
 
-    @Column(name = "expiration_date", nullable = false)
+    @Column(name = "expiration_date")
     LocalDate expirationDate;
 
     @Column(name = "frozen_until_date")

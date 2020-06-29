@@ -36,6 +36,7 @@ public class JavaMailSenderService {
     @Autowired
     private UserService userService;
 
+
     public String sendMessage(String email) throws Exception {
         User user = userService.findByEmail(email);
         if(user.getIsActive() == 1) throw new MailSendException("User is active");

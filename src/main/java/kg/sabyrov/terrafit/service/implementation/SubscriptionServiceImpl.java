@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,11 +69,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDto create(SubscriptionRequestDto subscriptionRequestDto) throws WrongBalanceException, UserNotFoundException {
         TrainingGroup trainingGroup = trainingGroupService.getById(subscriptionRequestDto.getTrainingGroupId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails)principal).getUsername();
+        String email = ((UserDetails) principal).getUsername();
 
         User user = userService.findByEmail(email);
 
-        if(!paymentService.isPaid(user, getTotalPrice(trainingGroup, subscriptionRequestDto))) throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
+        if (!paymentService.isPaid(user, getTotalPrice(trainingGroup, subscriptionRequestDto)))
+            throw new WrongBalanceException("Your balance is zero, please top up and make the payment again");
+
 
         Subscription subscription = save(Subscription.builder()
                 .trainingGroup(trainingGroup)
@@ -83,6 +86,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .status(Status.ACTIVE)
                 .build());
 
+        setExpirationDate(subscription);
         return getSubscriptionResponse(subscription);
 
     }
@@ -91,7 +95,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<SubscriptionResponseDto> getAllByUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails)principal).getUsername();
+        String email = ((UserDetails) principal).getUsername();
         User user = userService.findByEmail(email);
 
         return getSubResponseList(subscriptionRepository.findAllByUser(user));
@@ -99,7 +103,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponseDto findModelById(Long id) throws SubscriptionNotFoundException {
-        if(getById(id) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
+        if (getById(id) == null) throw new SubscriptionNotFoundException("Subscription with '" + id + "' id not found");
         return getSubscriptionResponse(getById(id));
     }
 
@@ -124,19 +128,31 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.saveAll(subscriptions);
     }
 
+    private void setExpirationDate(Subscription subscription){
+        if(subscription.getTrainingGroup().getTrainingGroupCategory().getName().equals("Тренажерный зал")){
+            subscription.setExpirationDate(subscription.getCreatedDate().toLocalDate().plusWeeks(6));
+        }
 
-    private List<SubscriptionResponseDto> getSubResponseList(List<Subscription> subscriptions){
+        if(subscription.getTrainingGroup().getTrainingGroupCategory().getName().equals("Фитнесс-группы")
+                || subscription.getTrainingGroup().getTrainingGroupCategory().getName().equals("Таэквондо ITF")
+        ){
+            subscription.setExpirationDate(subscription.getCreatedDate().toLocalDate().plusWeeks(5));
+        }
+        save(subscription);
+    }
+
+    private List<SubscriptionResponseDto> getSubResponseList(List<Subscription> subscriptions) {
         return subscriptions.stream()
                 .map(this::getSubscriptionResponse)
                 .collect(Collectors.toList());
     }
 
 
-    private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto){
-        if(trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1)
+    private BigDecimal getTotalPrice(TrainingGroup trainingGroup, SubscriptionRequestDto subscriptionRequestDto) {
+        if (trainingGroup.getTrainingGroupCategory().getName().equals("Тренажерный зал") && subscriptionRequestDto.getSessionQuantity() == 1)
             return new BigDecimal(200);
 
-        if(trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1)
+        if (trainingGroup.getTrainingGroupCategory().getName().equals("Фитнесс-группы") && subscriptionRequestDto.getSessionQuantity() == 1)
             return new BigDecimal(300);
 
         BigDecimal price = trainingGroup.getSubscriptionPrice().multiply(getMultiplierForPrice(subscriptionRequestDto.getSessionQuantity()));
@@ -145,21 +161,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return price.subtract(discountPrice).setScale(1, RoundingMode.UP);
     }
 
-    private BigDecimal getMultiplierForPrice(Integer sessionQuantity){
-        switch (sessionQuantity){
-            case 12 : return new BigDecimal(1);
-            case 24 : return new BigDecimal(2);
-            case 36 : return new BigDecimal(3);
+    private BigDecimal getMultiplierForPrice(Integer sessionQuantity) {
+        switch (sessionQuantity) {
+            case 12:
+                return new BigDecimal(1);
+            case 24:
+                return new BigDecimal(2);
+            case 36:
+                return new BigDecimal(3);
         }
         return BigDecimal.ZERO;
     }
 
-    private Integer getDiscountPercentages(String promoCode){
+    private Integer getDiscountPercentages(String promoCode) {
         PromoCode promoCodeFromDb = promoCodeService.findByName(promoCode);
         return promoCodeFromDb == null ? 0 : promoCodeFromDb.getDiscountPercentages();
     }
 
-    private SubscriptionResponseDto getSubscriptionResponse(Subscription subscription){
+    private SubscriptionResponseDto getSubscriptionResponse(Subscription subscription) {
         return SubscriptionResponseDto.builder()
                 .trainingName(subscription.getTrainingGroup().getName())
                 .userEmail(subscription.getUser().getEmail())
@@ -172,5 +191,4 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .dateOfPurchase(subscription.getCreatedDate())
                 .build();
     }
-
 }

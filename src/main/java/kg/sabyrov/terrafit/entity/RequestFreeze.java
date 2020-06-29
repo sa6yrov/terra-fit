@@ -23,8 +23,10 @@ public class RequestFreeze extends BaseEntity {
     @Column(name = "frozen_days_quantity", nullable = false)
     Long frozenDaysQuantity;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status;
+
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     User manager;

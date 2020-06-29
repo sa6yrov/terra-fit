@@ -2,9 +2,11 @@ package kg.sabyrov.terrafit.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kg.sabyrov.terrafit.dto.requestForFreezeDto.RequestFreezeDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
 import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
+import kg.sabyrov.terrafit.service.RequestFreezeService;
 import kg.sabyrov.terrafit.service.SubscriptionService;
 import kg.sabyrov.terrafit.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class SubscriptionController {
 
     @Autowired
     private VisitService visitService;
+
+
 
     @ApiOperation(value = "FOR 'ADMIN' - get all subscription models")
     @GetMapping
@@ -64,7 +68,7 @@ public class SubscriptionController {
 
     @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount between two time")
     @PostMapping("/total-amount")
-    private ResponseEntity<?> getTotalAmount(@RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
+    public ResponseEntity<?> getTotalAmount(@RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
         try {
             return new ResponseEntity<>(subscriptionService.getTotalAmountByTwoDate(requestTwoLocalDateTimeDto), HttpStatus.OK);
         }catch (Exception e){
@@ -74,11 +78,13 @@ public class SubscriptionController {
 
     @ApiOperation(value = "FOR 'ADMIN' - get subscription's total amount by training group between two time")
     @PostMapping("/training-group/total-amount")
-    private ResponseEntity<?> getTotalAmountByGroup(@RequestBody VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto){
+    public ResponseEntity<?> getTotalAmountByGroup(@RequestBody VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto){
         try {
             return new ResponseEntity<>(subscriptionService.getSumByTwoDateAndGroup(visitRequestByGroupAndTwoTimesDto), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }
