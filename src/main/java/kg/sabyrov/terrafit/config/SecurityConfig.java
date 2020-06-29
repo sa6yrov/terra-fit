@@ -56,11 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/api/role").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/employee").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/employee/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/training-group").permitAll()
+
                 .antMatchers(HttpMethod.POST, "/api/training-group").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
 
@@ -70,11 +69,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/api/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
 
-                .antMatchers(HttpMethod.POST, "/api/visit/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/visit-history/**").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET,"api/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "api/**").hasRole("ADMIN")
 
+                .antMatchers(HttpMethod.GET, "/api/user/person-parameters").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/user/person-parameters").hasRole("USER")
 
                 .anyRequest().authenticated()
                 .and()
@@ -90,6 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/register")
                 .antMatchers(HttpMethod.POST, "/recovery")
                 .antMatchers(HttpMethod.POST, "/confirm")
+                .antMatchers(HttpMethod.GET, "/api/training-group")
+                .antMatchers(HttpMethod.GET, "/api/employee")
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",

@@ -23,4 +23,5 @@ public interface SubscriptionService extends BaseService<Subscription> {
     TotalAmountBetweenDateResponseDto getTotalAmountByTwoDate(RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto);
 
     TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto);
+    List<Subscription> saveAll(List<Subscription> subscriptions);
 }

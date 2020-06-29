@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,15 +19,7 @@ import java.util.Date;
 public class Visit extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    User user;
-
-    @ManyToOne
-    @JoinColumn(name = "subscription_id", referencedColumnName = "id")
+    @JoinColumn(name = "subscription_id", referencedColumnName = "id", nullable = false)
     Subscription subscription;
-
-    @ManyToOne
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
-    User manager;
 
 }

@@ -16,43 +16,43 @@ public class VisitController {
     @Autowired
     private VisitService visitService;
 
-    @ApiOperation(value = "FOR 'ADMIN' get all models")
-    @GetMapping
-    public ResponseEntity<?> getAllModels(){
-        try {
-            return new ResponseEntity<>(visitService.getAllModels(), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @ApiOperation(value = "FOR 'ADMIN' get visit models in a time interval")
-    @PostMapping
-    public ResponseEntity<?> getAllByTwoTime(@RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
-        try {
-            return new ResponseEntity<>(visitService.getAllVisitsBetweenTime(requestTwoLocalDateTimeDto), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @ApiOperation(value = "FOR 'ADMIN' get visit models by subscription id")
-    @GetMapping("/subscription/{id}")
-    public ResponseEntity<?> getVisitsBySubscriptionId(@PathVariable Long id){
-        try {
-            return new ResponseEntity<>(visitService.findAllBySubscription(id), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @ApiOperation(value = "FOR 'ADMIN' get all visit models by training group in time intervals")
-    @PostMapping("/training-group/{id}")
-    public ResponseEntity<?> getVisitsByTrainingGroupAndTwoTimes(@PathVariable Long id, RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
-        try {
-            return new ResponseEntity<>(visitService.findAllByTrainingGroupAndBetweenTime(id, requestTwoLocalDateTimeDto), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @ApiOperation(value = "FOR 'ADMIN' get all visitHistory models")
+//    @GetMapping
+//    public ResponseEntity<?> getAllModels(){
+//        try {
+//            return new ResponseEntity<>(visitService.getAllModels(), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @ApiOperation(value = "FOR 'ADMIN' get visitHistory models in a time interval")
+//    @PostMapping
+//    public ResponseEntity<?> getAllByTwoTime(@RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
+//        try {
+//            return new ResponseEntity<>(visitService.getAllVisitsBetweenTime(requestTwoLocalDateTimeDto), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @ApiOperation(value = "FOR 'ADMIN' get visit models by subscription id")
+//    @GetMapping("/subscription/{id}")
+//    public ResponseEntity<?> getVisitsBySubscriptionId(@PathVariable Long id){
+//        try {
+//            return new ResponseEntity<>(visitService.findAllBySubscription(id), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @ApiOperation(value = "FOR 'ADMIN' get all visit models by training group in time intervals")
+//    @PostMapping("/training-group/{id}")
+//    public ResponseEntity<?> getVisitsByTrainingGroupAndTwoTimes(@PathVariable Long id, @RequestBody RequestTwoLocalDateTimeDto requestTwoLocalDateTimeDto){
+//        try {
+//            return new ResponseEntity<>(visitService.findAllByTrainingGroupAndBetweenTime(id, requestTwoLocalDateTimeDto), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

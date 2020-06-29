@@ -17,6 +17,6 @@ import javax.persistence.Table;
 @Table(name = "training_group_category")
 public class TrainingGroupCategory extends BaseEntity{
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     String name;
 }

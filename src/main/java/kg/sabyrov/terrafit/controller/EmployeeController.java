@@ -18,7 +18,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @ApiOperation(value = "PERMIT ALL - get all EmployeeModels")
+    @ApiOperation(value = "FOR ANYBODY - get all EmployeeModels")
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {

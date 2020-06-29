@@ -119,6 +119,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .build();
     }
 
+    @Override
+    public List<Subscription> saveAll(List<Subscription> subscriptions) {
+        return subscriptionRepository.saveAll(subscriptions);
+    }
+
 
     private List<SubscriptionResponseDto> getSubResponseList(List<Subscription> subscriptions){
         return subscriptions.stream()
@@ -164,6 +169,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .discountPercentages(subscription.getDiscountPercentages())
                 .totalAmount(subscription.getTotalAmount())
                 .status(subscription.getStatus())
+                .dateOfPurchase(subscription.getCreatedDate())
                 .build();
     }
 

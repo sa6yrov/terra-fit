@@ -68,6 +68,12 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email){
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public List<UserResponseDto> getAllModels() {
+        return getAll().stream().map(this::mapUserToModel).collect(Collectors.toList());
+    }
+
     @Override
     public List<UserResponseDto> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException {
         List<UserResponseDto> users = userRepository.findBySurnameAndName(

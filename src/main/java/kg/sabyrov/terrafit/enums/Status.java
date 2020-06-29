@@ -7,5 +7,9 @@ public enum Status {
     ACTIVE,
     INACTIVE,
     FROZEN,
-    PAID
+    PAID,
+    APPROVED,
+    CANCELLED,
+    CONSIDERATION
+
 }

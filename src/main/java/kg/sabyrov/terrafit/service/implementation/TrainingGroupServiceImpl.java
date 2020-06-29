@@ -6,6 +6,7 @@ import kg.sabyrov.terrafit.entity.Employee;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.repository.TrainingGroupRepository;
 import kg.sabyrov.terrafit.service.EmployeeService;
+import kg.sabyrov.terrafit.service.TrainingGroupCategoryService;
 import kg.sabyrov.terrafit.service.TrainingGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class TrainingGroupServiceImpl implements TrainingGroupService {
     private TrainingGroupRepository trainingGroupRepository;
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private TrainingGroupCategoryService trainingGroupCategoryService;
 
 
     @Override
@@ -39,6 +43,7 @@ public class TrainingGroupServiceImpl implements TrainingGroupService {
                 .name(trainingGroupRequestDto.getName())
                 .employee(getEmployeeFromDb(trainingGroupRequestDto.getEmployeeEmail()))
                 .status(trainingGroupRequestDto.getStatus())
+                .trainingGroupCategory(trainingGroupCategoryService.getById(trainingGroupRequestDto.getTrainingGroupCategoryId()))
                 .build();
         return save(trainingGroup);
     }

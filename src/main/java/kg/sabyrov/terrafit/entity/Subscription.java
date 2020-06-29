@@ -6,6 +6,9 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -38,4 +41,12 @@ public class Subscription extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     Status status;
+
+    @Column(name = "expiration_date", nullable = false)
+    LocalDate expirationDate;
+
+    @Column(name = "frozen_until_date")
+    LocalDate frozenUntilDate;
+
+
 }

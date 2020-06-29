@@ -21,7 +21,7 @@ public class TrainingGroupController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    @ApiOperation(value = "PERMIT ALL - get all training groups")
+    @ApiOperation(value = "FOR ANYBODY - get all training groups")
     @GetMapping
     public ResponseEntity<?> getAllModels(){
         try {

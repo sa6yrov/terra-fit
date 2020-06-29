@@ -16,4 +16,5 @@ public class TrainingGroupRequestDto {
     String employeeEmail;
     BigDecimal subscriptionPrice;
     Status status;
+    Long trainingGroupCategoryId;
 }

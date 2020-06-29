@@ -20,7 +20,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
-            return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAllModels(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -49,7 +49,7 @@ public class UserController {
     @PostMapping("/find/byEmail")
     public ResponseEntity<?> search(@RequestBody String email){
         try {
-            return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getModelByEmail(email), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -26,7 +26,7 @@ public class UserRegisterConfirmRecoveryController {
     @Autowired
     private UserConfirmationCodeService userConfirmationCodeService;
 
-    @ApiOperation(value = "PERMIT ALL - register")
+    @ApiOperation(value = "FOR ANYBODY - register")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register (@RequestBody UserDto userDto){
         try {

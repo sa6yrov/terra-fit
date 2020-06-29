@@ -17,5 +17,4 @@ public class PersonParamRequestDto {
     Float hipGirth;
     Float bicepGirth;
     Float chestGirth;
-    Float noteGirth;
 }

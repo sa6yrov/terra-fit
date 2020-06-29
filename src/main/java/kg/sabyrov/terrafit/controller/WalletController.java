@@ -3,8 +3,6 @@ package kg.sabyrov.terrafit.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.walletDto.WalletReplenishDto;
-import kg.sabyrov.terrafit.dto.walletDto.WalletResponseDto;
-import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

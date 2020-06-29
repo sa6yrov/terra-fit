@@ -15,11 +15,11 @@ import javax.persistence.*;
 @Table(name = "user_confirmation_code")
 public class UserConfirmationCode extends BaseEntity {
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false, unique = true)
     String code;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     User user;
 
     @Column(name = "is_active")

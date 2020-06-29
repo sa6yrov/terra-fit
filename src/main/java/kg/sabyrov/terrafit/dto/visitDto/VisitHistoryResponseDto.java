@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VisitResponseDto {
-    String email;
-    String name;
-    String surname;
-    String trainingGroupName;
-    Long subscriptionId;
-    Integer sessionQuantity;
+public class VisitHistoryResponseDto {
+    String managerEmail;
+    String visitorEmail;
     LocalDateTime visitTime;
+    Long subscriptionId;
+    Integer sessionQuantityAfterVisit;
+    Integer subtractedSessions;
 }

@@ -18,17 +18,17 @@ import java.math.BigDecimal;
 public class TrainingGroup extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "training_group_category_id", referencedColumnName = "id")
+    @JoinColumn(name = "training_group_category_id", referencedColumnName = "id", nullable = false)
     TrainingGroupCategory trainingGroupCategory;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     String name;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     Employee employee;
 
-    @Column(name = "subscription_price")
+    @Column(name = "subscription_price", nullable = false)
     BigDecimal subscriptionPrice;
 
     @Column(name = "training_time")

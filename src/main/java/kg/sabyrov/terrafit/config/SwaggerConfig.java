@@ -50,7 +50,8 @@ public class SwaggerConfig {
                 .description("'WeCRM' spring boot application for 'TerraSport' gym")
                 .contact(new Contact("TerraSport", "http://www.terrasport.kg", "terragymkg@gmail.com"))
                 .version("1.0")
-                .license("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                .license("Apache License Version 2.0")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.txt")
                 .build();
     }
 

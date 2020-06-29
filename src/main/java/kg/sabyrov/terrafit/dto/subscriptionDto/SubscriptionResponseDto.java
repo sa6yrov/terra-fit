@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -20,4 +21,5 @@ public class SubscriptionResponseDto {
     Integer discountPercentages;
     BigDecimal totalAmount;
     Status status;
+    LocalDateTime dateOfPurchase;
 }

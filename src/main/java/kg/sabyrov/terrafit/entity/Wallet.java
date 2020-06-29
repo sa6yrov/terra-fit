@@ -19,10 +19,10 @@ public class Wallet extends BaseEntity{
 
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     User user;
 
-    @Column(name = "requisite")
+    @Column(name = "requisite", nullable = false, unique = true)
     String requisite;
 
     @Column(name = "balance")

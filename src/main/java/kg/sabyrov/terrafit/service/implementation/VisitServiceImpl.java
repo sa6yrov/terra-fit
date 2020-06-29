@@ -3,17 +3,11 @@ package kg.sabyrov.terrafit.service.implementation;
 import kg.sabyrov.terrafit.dto.subscriptionDto.SubscriptionIdDto;
 import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.dto.visitDto.VisitResponseDto;
-import kg.sabyrov.terrafit.entity.Subscription;
-import kg.sabyrov.terrafit.entity.TrainingGroup;
-import kg.sabyrov.terrafit.entity.User;
-import kg.sabyrov.terrafit.entity.Visit;
+import kg.sabyrov.terrafit.entity.*;
 import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.repository.VisitRepository;
-import kg.sabyrov.terrafit.service.SubscriptionService;
-import kg.sabyrov.terrafit.service.TrainingGroupService;
-import kg.sabyrov.terrafit.service.UserService;
-import kg.sabyrov.terrafit.service.VisitService;
+import kg.sabyrov.terrafit.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +31,9 @@ public class VisitServiceImpl implements VisitService {
     @Autowired
     private TrainingGroupService trainingGroupService;
 
+    @Autowired
+    private VisitHistoryService visitHistoryService;
+
     @Override
     public Visit save(Visit visit) {
         return visitRepository.save(visit);
@@ -58,20 +55,27 @@ public class VisitServiceImpl implements VisitService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails)principal).getUsername();
         User manager = userService.findByEmail(email);
+
         if(!checkCode(subscriptionIdDto.getCode()))
             throw new SubscriptionNotFoundException("Subscription with this code is inactive or not found");
 
+
         Subscription subscription = visitProcess(subscriptionIdDto.getCode());
 
-        User user = subscription.getUser();
-        Visit visit = Visit.builder()
+        Visit visit = save(Visit.builder()
                 .subscription(subscriptionService.save(subscription))
-                .user(user)
+                .build());
+
+        visitHistoryService.save(VisitHistory.builder()
                 .manager(manager)
-                .build();
+                .visit(visit)
+                .visitTime(visit.getCreatedDate())
+                .sessionQuantityAfterVisit(subscription.getSessionQuantity())
+                .subtractedSessions(1)
+                .build());
 
 
-        return mapVisitToModel(save(visit)); //'getModel' have Visit param, 'save(visit) return visit from DB'
+        return mapVisitToModel(visit);
     }
 
     @Override
@@ -120,13 +124,12 @@ public class VisitServiceImpl implements VisitService {
 
     private VisitResponseDto mapVisitToModel(Visit visit){
         return VisitResponseDto.builder()
-                .email(visit.getUser().getEmail())
-                .name(visit.getUser().getName())
-                .surname(visit.getUser().getSurname())
+                .email(visit.getSubscription().getUser().getEmail())
+                .name(visit.getSubscription().getUser().getName())
+                .surname(visit.getSubscription().getUser().getSurname())
                 .trainingGroupName(visit.getSubscription().getTrainingGroup().getName())
                 .subscriptionId(visit.getSubscription().getId())
                 .sessionQuantity(visit.getSubscription().getSessionQuantity())
-                .manager(visit.getManager().getEmail())
                 .visitTime(visit.getCreatedDate())
                 .build();
     }

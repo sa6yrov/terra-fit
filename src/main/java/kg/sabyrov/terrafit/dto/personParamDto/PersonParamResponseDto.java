@@ -20,6 +20,5 @@ public class PersonParamResponseDto {
     Float hipGirth;
     Float bicepGirth;
     Float chestGirth;
-    Float noteGirth;
     LocalDateTime createdDate;
 }

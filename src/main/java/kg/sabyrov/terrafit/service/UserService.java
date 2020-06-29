@@ -16,7 +16,7 @@ public interface UserService extends BaseService<User>{
     ResponseMessage create(UserDto userDto) throws Exception;
 
     User findByEmail(String email);
-
+    List<UserResponseDto> getAllModels();
     List<UserResponseDto> findBySurnameAndName(UserFindDto userFindDto) throws UserNotFoundException;
 
     UserResponseDto getModelByEmail(String email);
