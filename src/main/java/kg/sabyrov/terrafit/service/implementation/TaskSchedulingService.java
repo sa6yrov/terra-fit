@@ -28,8 +28,8 @@ public class TaskSchedulingService {
     @Autowired
     private SubscriptionService subscriptionService;
 
-//    @Scheduled(cron = "00 00 09 * * *")
-    @Scheduled(cron = "00 59 12 * * *")
+
+    @Scheduled(cron = "00 00 12 * * *")
     public void checkAndDeActiveSubscription(){
         List<Subscription> list = getSubscriptions(Status.ACTIVE);
         for (Subscription s : list) {
@@ -38,8 +38,8 @@ public class TaskSchedulingService {
         }
     }
 
-//    @Scheduled(cron = "00 00 10 * * *")
-    @Scheduled(cron = "00 57 12 * * *")
+
+    @Scheduled(cron = "00 00 09, 21 * * *")
     public void checkAndDeFrostSubscription(){
         List<Subscription> list = getSubscriptions(Status.FROZEN);
         for (Subscription s : list) {
@@ -48,8 +48,8 @@ public class TaskSchedulingService {
         }
     }
 
-//    @Scheduled(cron = "00 00 11, 20 * * *")
-    @Scheduled(cron = "00 55 12 * * *")
+
+    @Scheduled(cron = "00 00 9, 20 * * *")
     public void sendRequestsToAdminMail() throws RequestNotFoundException, MessagingException {
         List<RequestFreeze> list = requestFreezeService.getAllByStatus(Status.CONSIDERATION);
         String message = "<table border=\"2\" cellpadding=\"8\" cellspacing=\"0\" align=\"center\">\n> \"<caption>REQUESTS</caption>\" <thead> <tr> " +
