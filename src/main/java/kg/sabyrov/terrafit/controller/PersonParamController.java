@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user/person-parameter")
+@RequestMapping("/api/person-parameter")
 @Api(tags = "Person Parameters", description = "Controller for write person parameters")
 public class PersonParamController {
 

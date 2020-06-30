@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/user/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/user/find").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/user/find/**").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/role").hasRole("ADMIN")
 
@@ -61,21 +61,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
                 .antMatchers(HttpMethod.POST, "/api/training-group").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/training-group/subscription/buy").hasAnyRole("USER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/subscription/my").hasAnyRole("USER", "ADMIN")
-//                .antMatchers(HttpMethod.GET, "/api/subscription/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.POST, "/api/subscription/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.POST, "/api/wallet/my/replenish").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "/api/subscription/my").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/subscription/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/subscription/**").hasRole("ADMIN")
 
+                .antMatchers(HttpMethod.GET, "/api/visit-history/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/visit-history/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET,"api/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "api/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/api/auth-log").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/auth-log").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/auth-log/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/user/person-parameters").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/api/user/person-parameters").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/person-parameter").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/person-parameter").hasRole("USER")
+
+                .antMatchers(HttpMethod.POST, "/api/subscription/freeze-request").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/subscription/freeze-request").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/subscription/freeze-request/**").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
                 .and()

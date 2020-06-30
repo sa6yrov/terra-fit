@@ -4,6 +4,7 @@ import kg.sabyrov.terrafit.dto.subscriptionDto.*;
 import kg.sabyrov.terrafit.dto.visitDto.VisitRequestByGroupAndTwoTimesDto;
 import kg.sabyrov.terrafit.dto.visitDto.RequestTwoLocalDateTimeDto;
 import kg.sabyrov.terrafit.entity.Subscription;
+import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.SubscriptionNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.exceptions.WrongBalanceException;
@@ -24,4 +25,6 @@ public interface SubscriptionService extends BaseService<Subscription> {
 
     TotalAmountByTrainingGroupResponseDto getSumByTwoDateAndGroup(VisitRequestByGroupAndTwoTimesDto visitRequestByGroupAndTwoTimesDto);
     List<Subscription> saveAll(List<Subscription> subscriptions);
+
+    List<Subscription> getAllByStatus(Status status);
 }

@@ -27,7 +27,7 @@ public class HtmlMessageSenderService {
     String password;
 
 
-    public String sendHtmlEmail(String message) throws MessagingException {
+    public String sendHtmlEmail(String message, String mailTo) throws MessagingException {
 
         // sets SMTP server properties
         Properties properties = new Properties();
@@ -49,7 +49,7 @@ public class HtmlMessageSenderService {
         Message msg = new MimeMessage(session);
 
         msg.setFrom(new InternetAddress(userName));
-        InternetAddress[] toAddresses = {new InternetAddress(userName)};
+        InternetAddress[] toAddresses = {new InternetAddress(mailTo)};
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject("Requests for review");
         msg.setSentDate(new Date());

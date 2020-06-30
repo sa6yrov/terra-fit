@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.sabyrov.terrafit.dto.requestForFreezeDto.RequestApprovingCancellingDto;
 import kg.sabyrov.terrafit.dto.requestForFreezeDto.RequestFreezeDto;
-import kg.sabyrov.terrafit.exceptions.RequestNotFoundException;
 import kg.sabyrov.terrafit.service.RequestFreezeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +28,11 @@ public class RequestFreezeController {
         }
     }
 
-    @ApiOperation(value = "FOR 'ADMIN' - get all requestFreeze models")
+    @ApiOperation(value = "FOR 'ADMIN' - get all requestFreeze models by status")
     @GetMapping
     public ResponseEntity<?> getAll(){
         try {
-            return new ResponseEntity<>(requestFreezeService.getAllByStatus(), HttpStatus.OK);
+            return new ResponseEntity<>(requestFreezeService.getAllModelByStatusConsideration(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

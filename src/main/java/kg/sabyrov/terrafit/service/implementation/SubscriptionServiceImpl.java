@@ -128,6 +128,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.saveAll(subscriptions);
     }
 
+    @Override
+    public List<Subscription> getAllByStatus(Status status) {
+        return subscriptionRepository.findAllByStatus(status);
+    }
+
     private void setExpirationDate(Subscription subscription){
         if(subscription.getTrainingGroup().getTrainingGroupCategory().getName().equals("Тренажерный зал")){
             subscription.setExpirationDate(subscription.getCreatedDate().toLocalDate().plusWeeks(6));
@@ -189,6 +194,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .totalAmount(subscription.getTotalAmount())
                 .status(subscription.getStatus())
                 .dateOfPurchase(subscription.getCreatedDate())
+                .expirationDate(subscription.getExpirationDate())
                 .build();
     }
 }

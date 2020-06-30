@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HtmlMessageSenderService htmlMessageSenderService;
+
     @Override
     public RequestFreeze save(RequestFreeze requestFreeze) {
         return requestFreezeRepository.save(requestFreeze);
@@ -54,13 +58,20 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     }
 
     @Override
-    public List<FreezeResponseDto> getAllByStatus() {
-        return requestFreezeRepository.findAllByStatus(Status.CONSIDERATION)
+    public List<FreezeResponseDto> getAllModelByStatusConsideration() throws RequestNotFoundException {
+        List<FreezeResponseDto> list = requestFreezeRepository.findAllByStatus(Status.CONSIDERATION)
                 .stream().map(this::mapRequestFreezeToModel).collect(Collectors.toList());
+        if (list.isEmpty()) throw new RequestNotFoundException("Requests with status 'CONSIDERATION' not found");
+        return list;
     }
 
     @Override
-    public ResponseMessage create(RequestFreezeDto requestFreezeDto) throws UserNotFoundException {
+    public List<RequestFreeze> getAllByStatus(Status s) {
+        return requestFreezeRepository.findAllByStatus(s);
+    }
+
+    @Override
+    public ResponseMessage create(RequestFreezeDto requestFreezeDto){
 
         save(RequestFreeze.builder()
                 .subscription(subscriptionService.getById(requestFreezeDto.getSubscriptionId()))
@@ -72,30 +83,38 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     }
 
     @Override
-    public ResponseMessage approving(RequestApprovingCancellingDto requestApprovingCancellingDto) throws RequestNotFoundException {
+    public ResponseMessage approving(RequestApprovingCancellingDto requestApprovingCancellingDto) throws RequestNotFoundException, MessagingException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
         User manager = userService.findByEmail(email);
 
         List<RequestFreeze> requestFreezes = approvedOrCancelledProcess(Status.APPROVED, requestApprovingCancellingDto.getIdList(), manager);
         freezingProcess(requestFreezes);
+        sendMessageForUsers(requestFreezes, "Your request was successfully approved");
         return ResponseMessage.builder().message("Requests was successfully approved").build();
     }
 
     @Override
-    public ResponseMessage cancelling(RequestApprovingCancellingDto requestApprovingCancellingDto) {
+    public ResponseMessage cancelling(RequestApprovingCancellingDto requestApprovingCancellingDto) throws MessagingException, RequestNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
 
         User manager = userService.findByEmail(email);
 
+        List<RequestFreeze> requestFreezes = approvedOrCancelledProcess(Status.CANCELLED, requestApprovingCancellingDto.getIdList(), manager);
 
-        return approvedOrCancelledProcess(Status.CANCELLED, requestApprovingCancellingDto.getIdList(), manager) != null ?
-                new ResponseMessage("Requests was successfully cancelled") : new ResponseMessage("Requests for freezing ");
+        sendMessageForUsers(requestFreezes, "Your request was cancelled");
+        return new ResponseMessage("Requests was successfully cancelled");
+
     }
 
-    private void freezingProcess(List<RequestFreeze> requestFreezes) throws RequestNotFoundException {
-        if (requestFreezes == null) throw new RequestNotFoundException("Requests for freezing subscription not found");
+    private void sendMessageForUsers(List<RequestFreeze> list, String message) throws MessagingException {
+        for (RequestFreeze r : list) {
+            htmlMessageSenderService.sendHtmlEmail(message, r.getSubscription().getUser().getEmail());
+        }
+    }
+
+    private void freezingProcess(List<RequestFreeze> requestFreezes) {
         List<Subscription> subscriptions = new ArrayList<>();
 
         for (RequestFreeze r : requestFreezes) {
@@ -119,25 +138,20 @@ public class RequestFreezeServiceImpl implements RequestFreezeService {
     }
 
 
-    private List<RequestFreeze> approvedOrCancelledProcess(Status status, List<Long> idList, User manager) {
-        try {
-            List<RequestFreeze> freezeList = requestFreezeRepository.findAllByStatus(Status.CONSIDERATION);
-
-            List<RequestFreeze> listForApproving = new ArrayList<>();
-            for (Long l : idList) {
-                for (RequestFreeze r : freezeList) {
-                    if (l.equals(r.getId())) {
-                        r.setStatus(status);
-                        r.setNotify(0);
-                        r.setManager(manager);
-                        listForApproving.add(r);
-                    }
+    private List<RequestFreeze> approvedOrCancelledProcess(Status status, List<Long> idList, User manager) throws RequestNotFoundException {
+        List<RequestFreeze> freezeList = getAllByStatus(Status.CONSIDERATION);
+        if (freezeList.isEmpty() || idList.isEmpty()) throw new RequestNotFoundException("Requests for freezing subscription not found");
+        List<RequestFreeze> listForApproving = new ArrayList<>();
+        for (Long l : idList) {
+            for (RequestFreeze r : freezeList) {
+                if (l.equals(r.getId())) {
+                    r.setStatus(status);
+                    r.setNotify(0);
+                    r.setManager(manager);
+                    listForApproving.add(r);
                 }
             }
-            requestFreezeRepository.saveAll(listForApproving);
-            return freezeList;
-        } catch (Exception e) {
-            return null;
         }
+        return requestFreezeRepository.saveAll(listForApproving);
     }
 }

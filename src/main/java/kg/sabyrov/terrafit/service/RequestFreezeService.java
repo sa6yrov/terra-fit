@@ -9,15 +9,16 @@ import kg.sabyrov.terrafit.exceptions.RequestNotFoundException;
 import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.models.ResponseMessage;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface RequestFreezeService extends BaseService<RequestFreeze> {
-    List<FreezeResponseDto> getAllByStatus();
-
+    List<FreezeResponseDto> getAllModelByStatusConsideration() throws RequestNotFoundException;
+    List<RequestFreeze> getAllByStatus(Status s);
     ResponseMessage create(RequestFreezeDto requestFreezeDto) throws UserNotFoundException;
 
-    ResponseMessage approving(RequestApprovingCancellingDto requestApprovingCancellingDto) throws RequestNotFoundException;
+    ResponseMessage approving(RequestApprovingCancellingDto requestApprovingCancellingDto) throws RequestNotFoundException, MessagingException;
 
-    ResponseMessage cancelling(RequestApprovingCancellingDto requestApprovingCancellingDto);
+    ResponseMessage cancelling(RequestApprovingCancellingDto requestApprovingCancellingDto) throws MessagingException, RequestNotFoundException;
 
 }

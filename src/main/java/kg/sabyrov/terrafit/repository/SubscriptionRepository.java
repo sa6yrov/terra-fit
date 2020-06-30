@@ -3,6 +3,7 @@ package kg.sabyrov.terrafit.repository;
 import kg.sabyrov.terrafit.entity.Subscription;
 import kg.sabyrov.terrafit.entity.TrainingGroup;
 import kg.sabyrov.terrafit.entity.User;
+import kg.sabyrov.terrafit.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     @Query("select sum(s.totalAmount) from Subscription s where s.createdDate between ?1 and ?2 and s.trainingGroup = ?3")
     BigDecimal getSumByTwoDateAndGroup(LocalDateTime startDate, LocalDateTime endDate, TrainingGroup trainingGroup);
+
+    List<Subscription> findAllByStatus(Status status);
 }
