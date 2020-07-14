@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import static springfox.bean.validators.plugins.Validators.annotationFromBean;
 
 public class EmailAnnotationPlugin implements ModelPropertyBuilderPlugin {
+    //It's class for swagger-settings, added to field in swagger 'example@email'
     @Override
     public void apply(ModelPropertyContext modelPropertyContext) {
         Optional<Email> email = annotationFromBean(modelPropertyContext, Email.class);

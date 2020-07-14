@@ -39,7 +39,7 @@ public class TaskSchedulingService {
     }
 
 
-    @Scheduled(cron = "00 00 09, 21 * * *")
+    @Scheduled(cron = "00 00 09 * * *")
     public void checkAndDeFrostSubscription(){
         List<Subscription> list = getSubscriptions(Status.FROZEN);
         for (Subscription s : list) {
@@ -49,10 +49,10 @@ public class TaskSchedulingService {
     }
 
 
-    @Scheduled(cron = "00 00 9, 20 * * *")
+    @Scheduled(cron = "00 00 10 * * *")
     public void sendRequestsToAdminMail() throws RequestNotFoundException, MessagingException {
         List<RequestFreeze> list = requestFreezeService.getAllByStatus(Status.CONSIDERATION);
-        String message = "<table border=\"2\" cellpadding=\"8\" cellspacing=\"0\" align=\"center\">\n> \"<caption>REQUESTS</caption>\" <thead> <tr> " +
+        String message = "<table border=\"2\" cellpadding=\"8\" cellspacing=\"0\" align=\"center\">\n <caption>REQUESTS</caption>\" <thead> <tr> " +
                 "<th>ID</th>" +
                 "<th>USER EMAIL</th>" +
                 "<th>Created date</th>" +

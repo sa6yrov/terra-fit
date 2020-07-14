@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/api/subscription/my").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/subscription/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/subscription/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.POST, "/api/subscription/**").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/visit-history/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/visit-history/**").hasRole("ADMIN")
@@ -79,7 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/api/subscription/freeze-request").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/subscription/freeze-request").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/subscription/freeze-request/**").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
                 .and()

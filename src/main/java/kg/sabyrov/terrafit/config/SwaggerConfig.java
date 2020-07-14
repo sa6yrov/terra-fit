@@ -44,6 +44,7 @@ public class SwaggerConfig {
                 .build();
     }
 
+    //for more information in swagger
     private ApiInfo metaInfo(){
         return new ApiInfoBuilder()
                 .title("WeCRM  API")
@@ -55,6 +56,7 @@ public class SwaggerConfig {
                 .build();
     }
 
+    //for jwt auth in swagger
     private ApiKey apiKey(){
         return new ApiKey("JWT", AUTHORIZATION_HEADER, "header");
     }

@@ -55,6 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
         return processPayment(payment, totalAmount);
     }
 
+    //subtract money from purchaser
     private boolean processPayment(Payment payment, BigDecimal totalAmount){
         Wallet from = payment.getWalletFrom();
         Wallet to = payment.getWalletTo();
