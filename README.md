@@ -19,3 +19,5 @@
 
 Примечание:
 Рабочий код находится на ветке "dev"
+
+Ссылка на документация API приложения : https://terrafit.herokuapp.com/swagger-ui.html
