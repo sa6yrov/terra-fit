@@ -3,6 +3,7 @@ package kg.sabyrov.terrafit.controller;
 import kg.sabyrov.terrafit.entity.AuthLog;
 import kg.sabyrov.terrafit.enums.Status;
 import kg.sabyrov.terrafit.exceptions.JwtAuthenticationException;
+import kg.sabyrov.terrafit.exceptions.UserNotFoundException;
 import kg.sabyrov.terrafit.models.JwtTokenRequest;
 import kg.sabyrov.terrafit.models.JwtTokenResponse;
 import kg.sabyrov.terrafit.service.AuthLogService;
@@ -41,7 +42,7 @@ public class JwtAuthController {
     }
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
-    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) {
+    public ResponseEntity<?> getToken(@RequestBody JwtTokenRequest jwtTokenRequest) throws UserNotFoundException {
         try {
             authenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
 
